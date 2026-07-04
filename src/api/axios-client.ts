@@ -1,6 +1,5 @@
 import axios, {
   type AxiosError,
-  type AxiosResponse,
   type InternalAxiosRequestConfig,
 } from "axios";
 import { env } from "../lib/env";
