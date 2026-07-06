@@ -1,11 +1,8 @@
-import axios, {
-  type AxiosError,
-  type InternalAxiosRequestConfig,
-} from "axios";
+import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios";
 import { env } from "../lib/env";
 import { ApiError } from "./api-error";
 import { toast } from "sonner";
-
+import { useAuthStore } from "../features/auth/store/auth.store";
 interface BackendSuccessEnvelope<T> {
   readonly data: T;
   readonly success: true;
@@ -30,14 +27,8 @@ export const apiClient = axios.create({
 });
 
 apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  const authModule = (window as unknown as Record<string, unknown>).__argusAuth;
-  if (authModule && typeof authModule === "object") {
-    const store = authModule as {
-      getState: () => { accessToken: string | null };
-    };
-    const token = store.getState().accessToken;
-    if (token) config.headers.Authorization = `Bearer ${token}`;
-  }
+  const token = useAuthStore.getState().accessToken;
+  if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
@@ -49,12 +40,7 @@ apiClient.interceptors.response.use(
   },
   (error: AxiosError<BackendErrorEnvelope>) => {
     if (error.response?.status === 401) {
-      const authModule = (window as unknown as Record<string, unknown>)
-        .__argusAuth;
-      if (authModule && typeof authModule === "object") {
-        const store = authModule as { getState: () => { logout: () => void } };
-        store.getState().logout();
-      }
+      useAuthStore.getState().logout();
       toast.error("Sesi berakhir, silakan login kembali");
       window.location.href = "/login";
     }

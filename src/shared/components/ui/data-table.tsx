@@ -13,7 +13,7 @@ export interface Column<T> {
 
 interface DataTableProps<T> {
   columns: Column<T>[];
-  data: T[] | undefined;
+  data: readonly T[] | undefined;
   loading?: boolean;
   error?: boolean;
   emptyMessage?: ReactNode;
