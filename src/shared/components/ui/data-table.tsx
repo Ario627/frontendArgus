@@ -186,7 +186,7 @@ export function DataTable<T>({
       </table>
       <div
         ref={parentRef}
-        className="max-h-[600px] overflow-auto"
+        className="max-h-150 overflow-auto"
         onScroll={(e) => setScrollTop(e.currentTarget.scrollTop)}
       >
         <div
@@ -217,7 +217,7 @@ export function DataTable<T>({
                       <td
                         key={col.key}
                         className={cn(
-                          "px-4 py-3 text-sm leading-[48px]",
+                          "px-4 py-3 text-sm leading-12",
                           col.className,
                         )}
                       >

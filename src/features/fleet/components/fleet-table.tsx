@@ -10,7 +10,6 @@ import { Button } from "../../../shared/components/ui/button";
 import { EmptyState } from "../../../shared/components/feedback/empty-state";
 import { useDelayedLoading } from "../../../shared/hooks/use-delayed-loading";
 import { useAuthStore } from "../../auth/store/auth.store";
-import { cn } from "../../../lib/cn";
 import type { Fleet } from "../../../shared/types/fleet.types";
 
 interface FleetTableProps {
@@ -51,6 +50,7 @@ function FleetRowActions({
   return (
     <div className="flex items-center gap-1">
       <Button
+        className="cursor-pointer"
         variant="ghost"
         size="icon"
         onClick={(e) => {
@@ -63,6 +63,7 @@ function FleetRowActions({
       </Button>
       {fleet.deviceRevokedAt === null && (
         <Button
+          className="cursor-pointer"
           variant="ghost"
           size="icon"
           onClick={(e) => {
@@ -83,7 +84,7 @@ function FleetRowActions({
           onDelete(fleet);
         }}
         aria-label="Hapus armada"
-        className="text-destructive hover:text-destructive"
+        className="text-destructive hover:text-destructive cursor-pointer"
       >
         <Trash2 className="h-4 w-4" />
       </Button>

@@ -1,28 +1,39 @@
 import { useState, type MouseEvent } from "react";
 import { useHealthCheck } from "../../hooks/use-health-check";
 import { cn } from "../../../lib/cn";
-import { CheckCircle2, AlertTriangle, XCircle } from "lucide-react";
+import { Icon } from "../ui/icon";
 
 type HealthState = "ok" | "degraded" | "down";
 
-const HEALTH_CONFIG: Record<HealthState, { colorClass: string; label: string; icon: typeof CheckCircle2 }> = Object.freeze({
-  ok:       { colorClass: "text-status-normal",  label: "Sistem normal",                   icon: CheckCircle2 },
-  degraded: { colorClass: "text-status-stale",   label: "Sebagian layanan bermasalah",      icon: AlertTriangle },
-  down:     { colorClass: "text-status-offline", label: "Tidak dapat terhubung ke server",  icon: XCircle },
+const HEALTH_CONFIG: Record<
+  HealthState,
+  { colorClass: string; label: string; icon: "dashboard" | "warning" | "close" }
+> = Object.freeze({
+  ok: { colorClass: "text-status-normal", label: "Sistem normal", icon: "dashboard" },
+  degraded: {
+    colorClass: "text-status-stale",
+    label: "Sebagian layanan bermasalah",
+    icon: "warning",
+  },
+  down: {
+    colorClass: "text-status-offline",
+    label: "Tidak dapat terhubung ke server",
+    icon: "close",
+  },
 });
 
 export function HealthIndicator() {
-    const {data, isError} = useHealthCheck();
-    const [showDetail, setShowDetail] = useState(false);
+  const { data, isError } = useHealthCheck();
+  const [showDetail, setShowDetail] = useState(false);
 
-    const state: HealthState = isError || data?.status === "down"
-    ? "down"
-    : data?.status === "degraded"
-      ? "degraded"
-      : "ok";
+  const state: HealthState =
+    isError || data?.status === "down"
+      ? "down"
+      : data?.status === "degraded"
+        ? "degraded"
+        : "ok";
 
   const config = HEALTH_CONFIG[state];
-  const Icon = config.icon;
 
   const handleToggle = (e: MouseEvent) => {
     e.stopPropagation();
@@ -40,35 +51,44 @@ export function HealthIndicator() {
       <button
         type="button"
         onClick={handleToggle}
-        className="flex items-center gap-1.5 rounded-full p-1 transition-colors hover:bg-muted"
+        className="flex items-center gap-1.5 rounded-full border border-border bg-card px-2.5 py-1.5 shadow-sm transition-colors hover:border-brand/40"
         aria-label={config.label}
       >
-        <Icon className={cn("h-4 w-4", config.colorClass)} />
-        <span className="text-xs text-muted-foreground">{config.label}</span>
+        <Icon
+          name={config.icon}
+          size={14}
+          className={cn(config.colorClass)}
+        />
+        <span className="text-xs font-medium text-muted-foreground">
+          {config.label}
+        </span>
       </button>
 
       {showDetail && (
         <>
-          <div className="fixed inset-0 z-40" onClick={() => setShowDetail(false)} />
-          <div className="absolute right-0 top-full z-50 mt-2 w-64 rounded-lg border border-border bg-background p-4 shadow-lg">
-            <p className="mb-3 text-sm font-medium text-foreground">Status Sistem</p>
+          <div
+            className="fixed inset-0 z-40"
+            onClick={() => setShowDetail(false)}
+          />
+          <div className="absolute right-0 top-full z-50 mt-2 w-64 rounded-xl border border-border bg-card p-4 shadow-lg">
+            <p className="mb-3 text-sm font-semibold text-foreground">
+              Status Sistem
+            </p>
             <div className="space-y-2 text-xs">
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">Database</span>
-                <span className={dbOk ? "text-status-normal" : "text-status-offline"}>
-                  {dbOk ? "✓ Terhubung" : "✗ Terputus"}
-                </span>
+                <StatusValue ok={dbOk} />
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">MQTT</span>
-                <span className={mqttOk ? "text-status-normal" : "text-status-offline"}>
-                  {mqttOk ? "✓ Terhubung" : "✗ Terputus"}
-                </span>
+                <StatusValue ok={mqttOk} />
               </div>
               {lastCheck !== null && (
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Terakhir dicek</span>
-                  <span className="text-muted-foreground">{lastCheck}s lalu</span>
+                  <span className="text-muted-foreground">
+                    {lastCheck}s lalu
+                  </span>
                 </div>
               )}
             </div>
@@ -76,5 +96,19 @@ export function HealthIndicator() {
         </>
       )}
     </div>
+  );
+}
+
+function StatusValue({ ok }: { ok: boolean }) {
+  return (
+    <span
+      className={cn(
+        "flex items-center gap-1 font-medium",
+        ok ? "text-status-normal" : "text-status-offline",
+      )}
+    >
+      <Icon name={ok ? "dashboard" : "close"} size={12} />
+      {ok ? "Terhubung" : "Terputus"}
+    </span>
   );
 }

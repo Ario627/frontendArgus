@@ -192,7 +192,7 @@ export function DestinationForm({
         errors={errors}
       />
 
-      <div className="flex justify-end gap-2 pt-2">
+      <div className="flex justify-end gap-2 pt-2 cursor-pointer">
         <Button
           type="button"
           variant="outline"

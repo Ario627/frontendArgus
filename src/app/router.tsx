@@ -39,8 +39,14 @@ function LazyRouteError() {
   );
 }
 
+const LandingPage = lazy(() =>
+  import("../features/landing/pages/landing-page").then((m) => ({ default: m.LandingPage })),
+);
 const LoginPage = lazy(() =>
   import("../features/auth/pages/login-page").then((m) => ({ default: m.LoginPage })),
+);
+const DashboardPage = lazy(() =>
+  import("../features/dashboard/pages/dashboard-page").then((m) => ({ default: m.DashboardPage })),
 );
 const FleetListPage = lazy(() =>
   import("../features/fleet/pages/fleet-list-page").then((m) => ({ default: m.FleetListPage })),
@@ -50,6 +56,12 @@ const FleetDetailPage = lazy(() =>
 );
 const DestinationListPage = lazy(() =>
   import("../features/destination/pages/destination-list-page").then((m) => ({ default: m.DestinationListPage })),
+);
+const OptimizationPage = lazy(() =>
+  import("../features/optimization/pages/optimization-page").then((m) => ({ default: m.OptimizationPage })),
+);
+const RecoveryPage = lazy(() =>
+  import("../features/recovery/pages/recovery-page").then((m) => ({ default: m.RecoveryPage })),
 );
 
 function ForbiddenPage() {
@@ -61,7 +73,7 @@ function ForbiddenPage() {
           Anda tidak memiliki akses ke halaman ini.
         </p>
         <Link
-          to="/dashboard"
+          to="/app/dashboard"
           className="inline-flex items-center justify-center rounded-md bg-brand px-4 py-2 text-sm font-medium text-brand-foreground"
         >
           Kembali ke Dashboard
@@ -80,7 +92,7 @@ function NotFoundPage() {
           Halaman yang Anda cari tidak ditemukan.
         </p>
         <Link
-          to="/dashboard"
+          to="/app/dashboard"
           className="inline-flex items-center justify-center rounded-md bg-brand px-4 py-2 text-sm font-medium text-brand-foreground"
         >
           Kembali ke Dashboard
@@ -92,6 +104,15 @@ function NotFoundPage() {
 
 export const router = createBrowserRouter([
   {
+    path: "/",
+    element: (
+      <Suspense fallback={<PageSkeleton />}>
+        <LandingPage />
+      </Suspense>
+    ),
+    errorElement: <LazyRouteError />,
+  },
+  {
     path: "/login",
     element: (
       <Suspense fallback={<PageSkeleton />}>
@@ -101,7 +122,7 @@ export const router = createBrowserRouter([
     errorElement: <LazyRouteError />,
   },
   {
-    path: "/",
+    path: "/app",
     element: <ProtectedLayout />,
     errorElement: (
       <ErrorBoundary>
@@ -109,7 +130,17 @@ export const router = createBrowserRouter([
       </ErrorBoundary>
     ),
     children: [
-      { index: true, element: <Navigate to="/dashboard" replace /> },
+      { index: true, element: <Navigate to="/app/dashboard" replace /> },
+      {
+        path: "dashboard",
+        element: (
+          <RoleGate roles={["admin", "supervisor", "driver"]}>
+            <Suspense fallback={<PageSkeleton />}>
+              <DashboardPage />
+            </Suspense>
+          </RoleGate>
+        ),
+      },
       {
         path: "fleet",
         element: (
@@ -136,6 +167,26 @@ export const router = createBrowserRouter([
           <RoleGate roles={["admin", "supervisor"]}>
             <Suspense fallback={<PageSkeleton />}>
               <DestinationListPage />
+            </Suspense>
+          </RoleGate>
+        ),
+      },
+      {
+        path: "optimization",
+        element: (
+          <RoleGate roles={["admin"]}>
+            <Suspense fallback={<PageSkeleton />}>
+              <OptimizationPage />
+            </Suspense>
+          </RoleGate>
+        ),
+      },
+      {
+        path: "recovery",
+        element: (
+          <RoleGate roles={["admin", "supervisor", "driver"]}>
+            <Suspense fallback={<PageSkeleton />}>
+              <RecoveryPage />
             </Suspense>
           </RoleGate>
         ),

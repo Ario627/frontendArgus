@@ -115,7 +115,7 @@ export function FleetListPage() {
       />
 
       <Dialog open={dialogMode !== null} onOpenChange={(open) => !open && handleCloseDialog()}>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent className="sm:max-w-125">
           <DialogHeader>
             <DialogTitle>
               {dialogMode === "create" ? "Tambah Armada Baru" : "Edit Armada"}

@@ -141,7 +141,7 @@ export function DestinationListPage() {
       </div>
 
       <div className="flex flex-wrap items-center gap-3 rounded-lg border border-border bg-background p-3">
-        <div className="relative flex-1 min-w-[200px]">
+        <div className="relative flex-1 min-w-50">
           <Search
             className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
             aria-hidden
@@ -205,7 +205,7 @@ export function DestinationListPage() {
         open={dialogMode !== null}
         onOpenChange={(open) => !open && handleCloseDialog()}
       >
-        <DialogContent className="sm:max-w-[550px]">
+        <DialogContent className="sm:max-w-137.5">
           <DialogHeader>
             <DialogTitle>
               {dialogMode === "create" ? "Tambah Destinasi Baru" : "Edit Destinasi"}

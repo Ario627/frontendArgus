@@ -90,7 +90,7 @@ function FormField({
 export function FleetForm({
   mode,
   defaultValues,
-  fleet,
+  fleet: _fleet,
   onSubmit,
   onCancel,
   isSubmitting,

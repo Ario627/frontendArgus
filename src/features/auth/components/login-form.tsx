@@ -94,7 +94,7 @@ export function LoginForm() {
       <Button
         type="submit"
         loading={login.isPending}
-        className="w-full"
+        className="w-full cursor-pointer"
         aria-busy={login.isPending}
       >
         {login.isPending ? "Memproses..." : "Login"}

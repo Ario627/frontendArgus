@@ -26,7 +26,7 @@ export function RevokeDeviceDialog({
 }: RevokeDeviceDialogProps) {
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onCancel()}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
           <DialogTitle>Cabut Perangkat</DialogTitle>
           <DialogDescription>

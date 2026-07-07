@@ -9,7 +9,7 @@ export const createFleetSchema = z.object({
     ),
   driverName: z.string().min(1, "Nama sopir wajib diisi"),
   driverContact: z.string().optional(),
-  capacityKg: z.number().min(0, "Kapasitas minimal 0 kg"),
+  capacityKg: z.coerce.number(),
 });
 
 export type CreateFleetFormValues = z.infer<typeof createFleetSchema>;

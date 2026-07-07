@@ -1,3 +1,4 @@
+import { type ReactNode } from "react";
 import { useLocation, Link, Outlet } from "react-router-dom";
 import { LayoutDashboard, Truck, LifeBuoy } from "lucide-react";
 import { useOnlineStatus } from "../../hooks/use-online-status";
@@ -10,14 +11,18 @@ interface MobileNavItem {
   readonly icon: typeof LayoutDashboard;
 }
 
+interface MobileShellProps {
+  readonly children?: ReactNode;
+}
+
 const MOBILE_NAV: readonly MobileNavItem[] = Object.freeze([
-  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/fleet",     label: "Armada",    icon: Truck },
-  { to: "/recovery",  label: "Recovery",  icon: LifeBuoy },
+  { to: "/app/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/app/fleet",     label: "Armada",    icon: Truck },
+  { to: "/app/recovery",  label: "Recovery",  icon: LifeBuoy },
 ]);
 
 
-export function MobileShell() {
+export function MobileShell({ children }: MobileShellProps) {
   const location = useLocation();
   const isOnline = useOnlineStatus();
 
@@ -30,16 +35,16 @@ export function MobileShell() {
         </div>
       )}
 
-      <header className="flex h-12 flex-shrink-0 items-center justify-between border-b border-border px-4">
+      <header className="flex h-12 shrink-0 items-center justify-between border-b border-border px-4">
         <span className="text-sm font-bold text-brand">ARGUS</span>
         <HealthIndicator />
       </header>
 
       <main className="flex-1 overflow-y-auto p-4" aria-busy={false}>
-        <Outlet />
+        {children ?? <Outlet />}
       </main>
 
-      <nav className="flex h-14 flex-shrink-0 items-center justify-around border-t border-border bg-background" aria-label="Navigasi mobile">
+      <nav className="flex h-14 shrink-0 items-center justify-around border-t border-border bg-background" aria-label="Navigasi mobile">
         {MOBILE_NAV.map(({ to, label, icon: Icon }) => {
           const isActive = location.pathname === to || location.pathname.startsWith(`${to}/`);
           return (

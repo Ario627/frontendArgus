@@ -5,7 +5,6 @@ import { authApi } from "../api/auth.api";
 import { useAuthStore } from "../store/auth.store";
 import { tokenToUser } from "../../../shared/lib/jwt";
 import { ApiError } from "../../../api/api-error";
-import type { LoginCredentials } from "../schemas/login.schema";
 
 interface LocationState {
   readonly from?: { readonly pathname: string };
@@ -17,7 +16,7 @@ export function useLogin() {
   const location = useLocation();
 
   const from =
-    (location.state as LocationState | null)?.from?.pathname ?? "/dashboard";
+    (location.state as LocationState | null)?.from?.pathname ?? "/app/dashboard";
 
   return useMutation({
     mutationFn: authApi.login,

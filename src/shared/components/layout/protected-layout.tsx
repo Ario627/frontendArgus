@@ -1,9 +1,12 @@
 import { type ReactNode, type FunctionComponent, type ComponentType } from "react";
-import { Navigate, useLocation, Link } from "react-router-dom";
+import { Navigate, useLocation, Link, Outlet } from "react-router-dom";
 import type { UserRole, AuthenticatedUser } from "../../types/common.types";
 import { USER_ROLE_SET } from "../../constants/roles.constant";
 import { isTokenExpired } from "../../lib/jwt";
 import { useAuthStore } from "../../../features/auth/store/auth.store";
+import { useMediaQuery } from "../../hooks/use-media-query";
+import { AppShell } from "./app-shell";
+import { MobileShell } from "./mobile-shell";
 
 interface ProtectedLayoutProps {
   readonly children?: ReactNode;
@@ -13,6 +16,9 @@ export function ProtectedLayout({ children }: ProtectedLayoutProps) {
   const location = useLocation();
   const accessToken = useAuthStore((s) => s.accessToken);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const user = useAuthStore((s) => s.user);
+  const logout = useAuthStore((s) => s.logout);
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
 
   const tokenValid = accessToken !== null && !isTokenExpired(accessToken);
   const isAuthed = isAuthenticated && tokenValid;
@@ -27,7 +33,14 @@ export function ProtectedLayout({ children }: ProtectedLayoutProps) {
     );
   }
 
-  return <>{children}</>;
+  const shellProps = {
+    userRole: user?.role ?? "",
+    userName: user?.username ?? "",
+    onLogout: logout,
+    children: children ?? <Outlet />,
+  };
+
+  return isDesktop ? <AppShell {...shellProps} /> : <MobileShell />;
 }
 
 interface RoleGateProps {

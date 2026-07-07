@@ -7,7 +7,10 @@ interface SkeletonProps {
 export function Skeleton({ className }: SkeletonProps) {
   return (
     <div
-      className={cn("animate-pulse rounded-md bg-muted", className)}
+      className={cn(
+        "animate-pulse rounded-md bg-muted",
+        className,
+      )}
       aria-hidden
     />
   );
@@ -35,12 +38,15 @@ export function SkeletonText({
 export function SkeletonCard({ className }: { className?: string }) {
   return (
     <div
-      className={cn("rounded-lg border border-border bg-background p-6", className)}
+      className={cn("rounded-xl border border-border bg-card p-5 shadow-sm", className)}
       aria-hidden
     >
-      <Skeleton className="mb-4 h-8 w-24" />
-      <Skeleton className="mb-2 h-4 w-full" />
-      <Skeleton className="h-4 w-3/4" />
+      <div className="flex items-start justify-between">
+        <Skeleton className="h-8 w-8 rounded-lg" />
+        <Skeleton className="h-2 w-2 rounded-full" />
+      </div>
+      <Skeleton className="mt-4 h-7 w-20" />
+      <Skeleton className="mt-2 h-3.5 w-24" />
     </div>
   );
 }
@@ -74,7 +80,7 @@ export function SkeletonTable({
 }) {
   return (
     <div
-      className={cn("overflow-hidden rounded-lg border border-border", className)}
+      className={cn("overflow-hidden rounded-xl border border-border bg-card shadow-sm", className)}
       aria-busy="true"
       aria-live="polite"
     >

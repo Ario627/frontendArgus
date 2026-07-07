@@ -15,7 +15,12 @@ export const queryKeys = {
     summary: ["dashboard", "summary"] as const,
     fleetPositions: ["dashboard", "fleet-positions"] as const,
   },
+  optimization: {
+    all: ["optimization"] as const,
+    result: ["optimization", "result"] as const,
+  },
   recovery: {
+    all: ["recovery"] as const,
     result: (id: string) => ["recovery", "result", id] as const,
   },
   health: ["health"] as const,
