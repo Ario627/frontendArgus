@@ -79,7 +79,7 @@ export function RecoveryPage() {
     <div className="space-y-6 p-6">
       <header className="flex flex-col gap-2 border-b border-border pb-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-status-fallback/10">
+          <div className="flex h-10 w-10 items-center justify-center  bg-status-fallback/10">
             <LifeBuoyIcon className="h-5 w-5 text-status-fallback" aria-hidden />
           </div>
           <div>
@@ -94,7 +94,7 @@ export function RecoveryPage() {
       </header>
 
       <section aria-label="Form trigger recovery">
-        <div className="rounded-lg border border-border bg-background p-5 space-y-4">
+        <div className=" border border-border bg-background p-5 space-y-4">
           <div className="space-y-2">
             <label
               htmlFor="broken-fleet-id"
@@ -110,7 +110,7 @@ export function RecoveryPage() {
               placeholder="Contoh: TRK-001"
               readOnly={isDriver}
               disabled={isDriver}
-              className="flex h-10 w-full rounded-md border border-border bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-70"
+              className="flex h-10 w-full  border border-border bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-70"
             />
             {isDriver && (
               <p className="text-xs text-muted-foreground">
@@ -131,7 +131,7 @@ export function RecoveryPage() {
 
       {triggerMutation.isPending && !lastResult && (
         <section aria-label="Memproses recovery">
-          <div className="flex items-center justify-center rounded-lg border border-border bg-muted/20 p-12">
+          <div className="flex items-center justify-center  border border-border bg-muted/20 p-12">
             <div className="flex flex-col items-center gap-3">
               <div className="h-8 w-8 animate-spin rounded-full border-2 border-brand border-t-transparent" />
               <p className="text-sm text-muted-foreground">

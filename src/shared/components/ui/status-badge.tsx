@@ -44,8 +44,8 @@ export function StatusBadge(props: StatusBadgeProps) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full font-medium",
-        "bg-muted text-foreground",
+        "inline-flex items-center gap-1.5 border border-border font-mono-readout font-medium uppercase tracking-wide",
+        "bg-card text-foreground",
         sizeClasses[size],
         className,
       )}
@@ -76,12 +76,12 @@ export function RealtimeIndicator({
     return (
       <span
         className={cn(
-          "inline-flex items-center gap-1 text-xs text-status-normal",
+          "inline-flex items-center gap-1 font-mono-readout text-xs text-status-normal",
           className,
         )}
       >
         <span className="h-2 w-2 rounded-full bg-status-normal" aria-hidden />
-        <span>Real-time</span>
+        <span>RT</span>
       </span>
     );
   }
@@ -96,7 +96,7 @@ export function RealtimeIndicator({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 text-xs text-status-stale",
+        "inline-flex items-center gap-1 font-mono-readout text-xs text-status-stale",
         className,
       )}
       title={`Data terakhir: ${stalenessLabel}`}
@@ -115,12 +115,12 @@ export function FallbackBadge({ className }: FallbackBadgeProps) {
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full bg-status-fallback/10 px-2.5 py-1 text-sm font-medium text-status-fallback",
+        "inline-flex items-center border border-status-fallback/40 bg-status-fallback/10 px-2.5 py-1 font-mono-readout text-sm font-medium uppercase tracking-wide text-status-fallback",
         className,
       )}
       title="Mode cadangan (rute belum optimal)"
     >
-      Mode Cadangan
+      Fallback
     </span>
   );
 }

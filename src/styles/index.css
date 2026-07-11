@@ -39,36 +39,35 @@
 
 @layer base {
   :root {
-    --brand: 217 91% 60%;
+    --brand: 156 61% 36%; 
     --brand-foreground: 0 0% 100%;
-    --brand-soft: 214 100% 97%;
-    --brand-subtle: 213 94% 94%;
+    --brand-soft: 156 30% 94%;
+    --brand-subtle: 156 20% 88%;
 
-    --status-normal: 142 71% 45%;
-    --status-stale: 38 92% 50%;
-    --status-offline: 215 16% 47%;
-    --status-broken: 0 84% 60%;
-    --status-fallback: 25 95% 53%;
-
-    --background: 210 40% 98%;
-    --foreground: 222 47% 11%;
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 222 47% 11%;
-    --destructive: 0 84% 60%;
+    --status-normal: 117 100% 50%; 
+    --status-stale: 41 100% 50%; 
+    --status-offline: 0 0% 50%; 
+    --status-broken: 0 100% 50%; 
+    --status-fallback: 25 95% 53%; 
+    --background: 213 25% 89%; 
+    --foreground: 220 13% 12%; 
+    --card: 210 15% 93%; 
+    --card-foreground: 220 13% 12%;
+    --muted: 213 16% 83%;
+    --muted-foreground: 213 10% 38%;
+    --accent: 213 16% 85%;
+    --accent-foreground: 220 13% 12%;
+    --destructive: 0 100% 50%; 
     --destructive-foreground: 0 0% 100%;
-    --border: 214 32% 91%;
-    --ring: 217 91% 60%;
+    --border: 213 12% 73%; 
+    --ring: 156 61% 36%;
 
-    --warning: 38 92% 50%;
-    --warning-foreground: 0 0% 100%;
-    --success: 142 71% 45%;
-    --success-foreground: 0 0% 100%;
+    --warning: 41 100% 50%; 
+    --warning-foreground: 0 0% 8%;
+    --success: 117 100% 50%; 
+    --success-foreground: 0 0% 8%;
 
-    --radius: 0.625rem;
+    --radius: 0.125rem;
     color-scheme: light;
   }
 }
@@ -108,10 +107,77 @@
   }
 }
 
-/* === Leaflet marker overrides === */
 .fleet-marker-icon {
   background: transparent;
   border: none;
+}
+
+.fleet-truck-marker {
+  transition: transform 0.3s ease-out, filter 0.2s ease;
+  cursor: pointer;
+}
+
+.fleet-truck-marker:hover {
+  transform: scale(1.15);
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.fleet-truck-marker svg {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* 3D zoom effect - enlarged marker when zoomed in */
+.fleet-truck-marker-3d {
+  animation: marker-3d-pulse 2s ease-in-out infinite;
+}
+
+@keyframes marker-3d-pulse {
+  0%, 100% {
+    transform: scale(1) translateY(0);
+  }
+  50% {
+    transform: scale(1.05) translateY(-2px);
+  }
+}
+
+.fleet-truck-marker::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 6px;
+  background: radial-gradient(ellipse, rgba(0,0,0,0.3) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.fleet-marker-realtime {
+  animation: realtime-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes realtime-pulse {
+  0%, 100% {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  }
+  50% {
+    filter: drop-shadow(0 2px 8px hsl(var(--status-normal) / 0.5));
+  }
+}
+
+.marker-cluster-custom {
+  background: hsl(var(--brand) / 0.2);
+  border: 2px solid hsl(var(--brand));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.marker-cluster-custom span {
+  color: hsl(var(--brand));
+  font-weight: 600;
+  font-size: 14px;
 }
 
 .leaflet-popup-content-wrapper,
@@ -120,17 +186,52 @@
   color: hsl(var(--card-foreground));
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
-  box-shadow:
-    0 4px 6px -1px rgb(0 0 0 / 0.05),
-    0 10px 15px -3px rgb(0 0 0 / 0.08);
+  
 }
 
-/* === Subtle data visualizers === */
 .metric-bar-bg {
   background: linear-gradient(90deg, hsl(var(--border)) 0%, hsl(var(--muted)) 100%);
 }
 
-/* === Keyframe Animations === */
+@utility font-mono-readout {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+@keyframes radar-sweep {
+  0% {
+    transform: rotate(0deg);
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.55;
+  }
+  100% {
+    transform: rotate(360deg);
+    opacity: 0.25;
+  }
+}
+
+@utility animate-radar-sweep {
+  animation: radar-sweep 4s linear infinite;
+}
+
+.event-log-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--border)) transparent;
+}
+.event-log-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.event-log-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.event-log-scroll::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--border));
+  border-radius: 0;
+}
+
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -182,7 +283,6 @@
   }
 }
 
-/* Animation utility classes */
 @utility animate-fade-in {
   animation: fade-in 0.35s ease-out both;
 }
@@ -199,7 +299,6 @@
   animation: slide-in-left 0.4s ease-out both;
 }
 
-/* Stagger children utility */
 .stagger-children > * {
   opacity: 0;
   animation: fade-in-up 0.45s ease-out both;
@@ -214,7 +313,6 @@
 .stagger-children > *:nth-child(7) { animation-delay: 240ms; }
 .stagger-children > *:nth-child(8) { animation-delay: 280ms; }
 
-/* Reduced motion: honor user preference */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

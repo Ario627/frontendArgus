@@ -32,7 +32,7 @@ export function FleetFilterBar({
   return (
     <div
       className={cn(
-        "flex flex-wrap items-center gap-3 rounded-lg border border-border bg-background p-3",
+        "flex flex-wrap items-center gap-3  border border-border bg-background p-3",
       )}
     >
       <div className="relative flex-1 min-w-50">
@@ -46,7 +46,7 @@ export function FleetFilterBar({
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder="Cari plat nomor atau nama sopir..."
           className={cn(
-            "h-10 w-full rounded-md border border-border bg-transparent pl-9 pr-3 text-sm",
+            "h-10 w-full  border border-border bg-transparent pl-9 pr-3 text-sm",
             "placeholder:text-muted-foreground",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
           )}
@@ -54,12 +54,12 @@ export function FleetFilterBar({
         />
       </div>
 
-      <div className="relative">
+      <div className="relative cursor-pointer">
         <select
           value={filters.status}
           onChange={(e) => onStatusChange(e.target.value as StatusFilter)}
           className={cn(
-            "h-10 appearance-none rounded-md border border-border bg-transparent pl-3 pr-8 text-sm",
+            "h-10 appearance-none  border border-border bg-transparent pl-3 pr-8 text-sm",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
           )}
           aria-label="Filter status"

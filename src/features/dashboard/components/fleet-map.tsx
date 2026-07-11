@@ -6,6 +6,8 @@ import {
   useCallback,
   useImperativeHandle,
   forwardRef,
+  lazy,
+  Suspense,
 } from "react";
 import { MapContainer, TileLayer, useMap, useMapEvents } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
@@ -19,6 +21,10 @@ import { Icon } from "../../../shared/components/ui/icon";
 import type { FleetPosition } from "../../../shared/types/fleet.types";
 import { FleetMarker } from "./fleet-marker";
 import "leaflet/dist/leaflet.css";
+
+const Truck3DViewer = lazy(() =>
+  import("./truck-3d-viewer").then((m) => ({ default: m.Truck3DViewer }))
+);
 
 export interface FleetMapRef {
   fitAll: () => void;
@@ -163,7 +169,7 @@ function isInBounds(
 function MapSkeleton() {
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-3 p-6">
-      <Skeleton className="h-12 w-12 rounded-full" />
+      <Skeleton className="h-12 w-12" />
       <Skeleton className="h-4 w-32" />
       <Skeleton className="h-3 w-24" />
     </div>
@@ -188,7 +194,7 @@ function MapButton({
       aria-label={label}
       title={label}
       className={cn(
-        "flex h-9 w-9 items-center justify-center rounded-lg border bg-card text-foreground shadow-sm transition-all duration-200",
+        "flex h-9 w-9 items-center justify-center  border bg-card text-foreground  transition-all duration-200",
         "hover:border-brand/40 hover:text-brand active:scale-95",
         active && "border-brand/40 text-brand",
       )}
@@ -206,12 +212,21 @@ export const FleetMap = forwardRef<FleetMapRef, FleetMapProps>(
     const [bounds, setBounds] = useState<MapBoundsState | null>(null);
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [showSatellite, setShowSatellite] = useState(false);
+    const [selectedTruck3D, setSelectedTruck3D] = useState<FleetPosition | null>(null);
     const mapRef = useRef<L.Map | null>(null);
     const containerRef = useRef<HTMLDivElement | null>(null);
     const showSkeleton = useDelayedLoading(isLoading);
 
     const handleMapReady = useCallback((map: L.Map) => {
       mapRef.current = map;
+    }, []);
+
+    const handleShow3D = useCallback((position: FleetPosition) => {
+      setSelectedTruck3D(position);
+    }, []);
+
+    const handleClose3D = useCallback(() => {
+      setSelectedTruck3D(null);
     }, []);
 
     useImperativeHandle(ref, () => ({
@@ -278,7 +293,7 @@ export const FleetMap = forwardRef<FleetMapRef, FleetMapProps>(
       return (
         <div
           className={cn(
-            "relative h-115 w-full overflow-hidden rounded-xl border border-border bg-card shadow-sm",
+            "relative h-115 w-full overflow-hidden  border border-border bg-card ",
             className,
           )}
           aria-busy="true"
@@ -309,7 +324,7 @@ export const FleetMap = forwardRef<FleetMapRef, FleetMapProps>(
       <div
         ref={containerRef}
         className={cn(
-          "group relative w-full overflow-hidden rounded-xl border border-border bg-card shadow-sm",
+          "group relative w-full overflow-hidden  border border-border bg-card ",
           isFullscreen ? "fixed inset-0 z-50 h-screen rounded-none border-0" : "h-115",
           className,
         )}
@@ -343,17 +358,24 @@ export const FleetMap = forwardRef<FleetMapRef, FleetMapProps>(
               showCoverageOnHover={false}
             >
               {visiblePositions.map((position) => (
-                <FleetMarker key={position.fleetId} position={position} />
+                <FleetMarker 
+                  key={position.fleetId} 
+                  position={position} 
+                  onShow3D={handleShow3D}
+                />
               ))}
             </MarkerClusterGroup>
           ) : (
             visiblePositions.map((position) => (
-              <FleetMarker key={position.fleetId} position={position} />
+              <FleetMarker 
+                key={position.fleetId} 
+                position={position} 
+                onShow3D={handleShow3D}
+              />
             ))
           )}
         </MapContainer>
 
-        {/* Map controls */}
         <div className="absolute right-3 top-3 z-400 flex flex-col gap-2">
           <MapButton
             label="Pusatkan semua armada"
@@ -391,10 +413,9 @@ export const FleetMap = forwardRef<FleetMapRef, FleetMapProps>(
           </MapButton>
         </div>
 
-        {/* Overlay: no data */}
         {!isLoading && positions && positions.length === 0 && (
-          <div className="absolute inset-0 z-500 flex flex-col items-center justify-center gap-2 bg-card/90 backdrop-blur-sm">
-            <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+          <div className="absolute inset-0 z-500 flex flex-col items-center justify-center gap-2 bg-card/90 ">
+            <div className="inline-flex h-12 w-12 items-center justify-center inline-flex border border-border bg-muted">
               <Icon name="map-pin" className="h-6 w-6 text-muted-foreground" />
             </div>
             <p className="text-sm font-medium text-foreground">
@@ -404,6 +425,12 @@ export const FleetMap = forwardRef<FleetMapRef, FleetMapProps>(
               Armada yang aktif akan muncul di sini setelah mengirimkan telemetry.
             </p>
           </div>
+        )}
+
+        {selectedTruck3D && (
+          <Suspense fallback={null}>
+            <Truck3DViewer position={selectedTruck3D} onClose={handleClose3D} />
+          </Suspense>
         )}
       </div>
     );

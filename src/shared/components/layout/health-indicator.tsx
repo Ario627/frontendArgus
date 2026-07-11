@@ -51,7 +51,7 @@ export function HealthIndicator() {
       <button
         type="button"
         onClick={handleToggle}
-        className="flex items-center gap-1.5 rounded-full border border-border bg-card px-2.5 py-1.5 shadow-sm transition-colors hover:border-brand/40"
+        className="flex items-center gap-1.5 border border-border bg-card px-2.5 py-1.5 transition-colors hover:border-foreground cursor-pointer"
         aria-label={config.label}
       >
         <Icon
@@ -59,7 +59,7 @@ export function HealthIndicator() {
           size={14}
           className={cn(config.colorClass)}
         />
-        <span className="text-xs font-medium text-muted-foreground">
+        <span className="font-mono-readout text-xs font-medium uppercase tracking-wide text-muted-foreground">
           {config.label}
         </span>
       </button>
@@ -70,11 +70,11 @@ export function HealthIndicator() {
             className="fixed inset-0 z-40"
             onClick={() => setShowDetail(false)}
           />
-          <div className="absolute right-0 top-full z-50 mt-2 w-64 rounded-xl border border-border bg-card p-4 shadow-lg">
-            <p className="mb-3 text-sm font-semibold text-foreground">
+          <div className="absolute right-0 top-full z-50 mt-1 w-64 border border-border bg-card p-4">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-foreground">
               Status Sistem
             </p>
-            <div className="space-y-2 text-xs">
+            <div className="space-y-2 font-mono-readout text-xs">
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">Database</span>
                 <StatusValue ok={dbOk} />
@@ -103,12 +103,12 @@ function StatusValue({ ok }: { ok: boolean }) {
   return (
     <span
       className={cn(
-        "flex items-center gap-1 font-medium",
+        "flex items-center gap-1 font-medium uppercase tracking-wide",
         ok ? "text-status-normal" : "text-status-offline",
       )}
     >
       <Icon name={ok ? "dashboard" : "close"} size={12} />
-      {ok ? "Terhubung" : "Terputus"}
+      {ok ? "Online" : "Offline"}
     </span>
   );
 }

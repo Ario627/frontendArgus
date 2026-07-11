@@ -56,7 +56,7 @@ function RecoveryResultCardInner({
   return (
     <div
       className={cn(
-        "rounded-lg border p-5 space-y-4",
+        " border p-5 space-y-4",
         config.bgClass,
         className,
       )}
@@ -67,7 +67,7 @@ function RecoveryResultCardInner({
         <div className="flex items-center gap-3">
           <div
             className={cn(
-              "flex h-10 w-10 items-center justify-center rounded-full",
+              "flex h-10 w-10 items-center justify-center border",
               config.bgClass,
             )}
           >
@@ -90,7 +90,7 @@ function RecoveryResultCardInner({
       </div>
 
       {showFallbackBadge && (
-        <div className="flex items-center gap-2 rounded-md bg-status-fallback/10 px-3 py-2 text-xs text-status-fallback">
+        <div className="flex items-center gap-2  bg-status-fallback/10 px-3 py-2 text-xs text-status-fallback">
           <AlertTriangleIcon className="h-3.5 w-3.5 shrink-0" />
           <span>
             Mode cadangan — rute belum optimal (redistribusi via greedy fallback,
@@ -100,7 +100,7 @@ function RecoveryResultCardInner({
       )}
 
       {showNoReceiverCTA && (
-        <div className="space-y-3 rounded-md bg-status-offline/10 px-3 py-3">
+        <div className="space-y-3  bg-status-offline/10 px-3 py-3">
           <div className="flex items-start gap-2 text-xs text-status-offline">
             <InfoIcon className="h-4 w-4 shrink-0 mt-0.5" />
             <p>
@@ -123,7 +123,7 @@ function RecoveryResultCardInner({
       )}
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <div className="rounded-md border border-border bg-background p-3">
+        <div className=" border border-border bg-background p-3">
           <p className="mb-1 text-xs font-medium text-muted-foreground">
             Armada Penerima
           </p>
@@ -142,7 +142,7 @@ function RecoveryResultCardInner({
           )}
         </div>
 
-        <div className="rounded-md border border-border bg-background p-3">
+        <div className=" border border-border bg-background p-3">
           <p className="mb-1 text-xs font-medium text-muted-foreground">
             Stop Didistribusi Ulang
           </p>
@@ -163,7 +163,7 @@ function RecoveryResultCardInner({
       </div>
 
       {result.llmNarrative !== null ? (
-        <div className="rounded-md border border-border bg-background p-3">
+        <div className=" border border-border bg-background p-3">
           <p className="mb-1.5 text-xs font-medium text-muted-foreground">
             Ringkasan Naratif
           </p>
@@ -172,7 +172,7 @@ function RecoveryResultCardInner({
           </p>
         </div>
       ) : (
-        <div className="flex items-center gap-2 rounded-md bg-muted/50 px-3 py-2 text-xs text-muted-foreground">
+        <div className="flex items-center gap-2  bg-muted/50 px-3 py-2 text-xs text-muted-foreground">
           <InfoIcon className="h-3.5 w-3.5 shrink-0" />
           Ringkasan naratif tidak tersedia saat ini
         </div>

@@ -33,7 +33,7 @@ function CheckboxGroup({
   return (
     <div className="space-y-2">
       <label className="text-sm font-medium text-foreground">{label}</label>
-      <div className="max-h-48 space-y-2 overflow-y-auto rounded-md border border-border p-3">
+      <div className="max-h-48 space-y-2 overflow-y-auto  border border-border p-3">
         {options.length === 0 ? (
           <p className="text-xs text-muted-foreground">Tidak ada pilihan tersedia</p>
         ) : (

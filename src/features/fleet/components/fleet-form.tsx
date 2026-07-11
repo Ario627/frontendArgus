@@ -13,10 +13,8 @@ import {
 } from "../schemas/update-fleet.schema";
 import type { Fleet } from "../../../shared/types/fleet.types";
 
-
 type FormMode = "create" | "edit";
 type FormValues = CreateFleetFormValues & Partial<UpdateFleetFormValues>;
-
 
 interface FleetFormProps {
   mode: FormMode;
@@ -73,7 +71,7 @@ function FormField({
         step={type === "number" ? "1" : undefined}
         {...register(name)}
         className={cn(
-          "flex h-10 w-full rounded-md border border-border bg-transparent px-3 py-2 text-sm",
+          "flex h-10 w-full border border-border bg-transparent px-3 py-2 text-sm",
           "placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-70",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
           error && "border-destructive",
@@ -90,7 +88,6 @@ function FormField({
 export function FleetForm({
   mode,
   defaultValues,
-  fleet: _fleet,
   onSubmit,
   onCancel,
   isSubmitting,

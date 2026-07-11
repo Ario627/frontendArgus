@@ -47,8 +47,8 @@ export class ErrorBoundary extends Component<Props, State> {
 
     return (
       <div className="flex min-h-screen items-center justify-center bg-background p-6">
-        <div className="w-full max-w-md rounded-lg border border-border bg-muted p-8 text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[hsl(var(--destructive)/0.1)]">
+        <div className="w-full max-w-md  border border-border bg-muted p-8 text-center">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center bg-[hsl(var(--destructive)/0.1)]">
             <span className="text-xl text-destructive">!</span>
           </div>
           <h1 className="mb-2 text-lg font-semibold text-foreground">
@@ -64,7 +64,7 @@ export class ErrorBoundary extends Component<Props, State> {
               <button
                 type="button"
                 onClick={this.handleRetry}
-                className="rounded-md bg-brand px-4 py-2 text-sm font-medium text-brand-foreground transition-opacity hover:opacity-90"
+                className=" bg-brand px-4 py-2 text-sm font-medium text-brand-foreground transition-opacity hover:opacity-90"
               >
                 Coba lagi
               </button>
@@ -72,7 +72,7 @@ export class ErrorBoundary extends Component<Props, State> {
             <button
               type="button"
               onClick={this.handleReload}
-              className="rounded-md border border-border bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+              className=" border border-border bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
             >
               Muat ulang halaman
             </button>

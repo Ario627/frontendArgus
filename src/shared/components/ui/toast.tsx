@@ -8,7 +8,7 @@ export function Toaster() {
       toastOptions={{
         classNames: {
           toast:
-            "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg",
+            "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:",
           description: "group-[.toast]:text-muted-foreground",
           actionButton:
             "group-[.toast]:bg-brand group-[.toast]:text-brand-foreground",

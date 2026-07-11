@@ -41,14 +41,8 @@ function OperatorBadge({
   role: string;
 }) {
   return (
-    <div className="flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 shadow-sm">
-      <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-brand/10 text-[10px] font-bold text-brand">
-        {username.charAt(0).toUpperCase()}
-      </span>
+    <div className="flex items-center gap-2 bg-card border border-border bg-card px-3 py-1.5 ">
       <div className="flex items-center gap-1.5">
-        <span className="max-w-25 truncate text-xs font-medium text-foreground">
-          {username}
-        </span>
         <span className="rounded bg-muted px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-muted-foreground">
           {role}
         </span>
@@ -65,17 +59,15 @@ function LayoutToolbar({
   onToggle: (id: "metrics" | "narrative") => void;
 }) {
   return (
-    <div className="flex items-center gap-1.5 rounded-lg border border-border bg-card p-1 shadow-sm">
+    <div className="flex items-center gap-1.5  border border-border bg-card p-1 ">
       <TogglePill
         active={visible.metrics}
         onClick={() => onToggle("metrics")}
-        icon="gauge"
         label="Metrik"
       />
       <TogglePill
         active={visible.narrative}
         onClick={() => onToggle("narrative")}
-        icon="file-text"
         label="Naratif"
       />
     </div>
@@ -85,12 +77,10 @@ function LayoutToolbar({
 function TogglePill({
   active,
   onClick,
-  icon,
   label,
 }: {
   active: boolean;
   onClick: () => void;
-  icon: "gauge" | "file-text";
   label: string;
 }) {
   return (
@@ -98,7 +88,7 @@ function TogglePill({
       type="button"
       onClick={onClick}
       className={cn(
-        "flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors",
+        "flex items-center gap-1.5  px-2.5 py-1.5 text-xs font-medium transition-colors cursor-pointer",
         active
           ? "bg-brand/10 text-brand"
           : "text-muted-foreground hover:bg-muted hover:text-foreground",
@@ -148,15 +138,13 @@ export function DashboardPage() {
           <h1 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
             Dashboard Operasional
           </h1>
-          <p className="text-sm text-muted-foreground">
-            Monitoring armada sampah secara real-time
-          </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
           {user && <OperatorBadge username={user.username} role={user.role} />}
           <LayoutToolbar visible={visibleCards} onToggle={toggleCard} />
           <Button
+            className="cursor-pointer"
             variant="outline"
             size="sm"
             onClick={handleRefresh}
@@ -184,11 +172,11 @@ export function DashboardPage() {
 
       <section aria-label="Peta posisi armada">
         <SectionHeader
-          title="Peta Posisi Armada"
+          title="Peta Posisi "
           description={`${fleetCount} armada aktif dilacak`}
           action={
             fleetPositionsQuery.isFetching && !fleetPositionsQuery.isLoading ? (
-              <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground shadow-sm">
+              <span className="inline-flex items-center gap-2 bg-card border border-border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground ">
                 <span
                   className="h-1.5 w-1.5 animate-pulse rounded-full bg-brand"
                   aria-hidden
@@ -212,12 +200,12 @@ export function DashboardPage() {
         <section aria-label="Ringkasan operasional">
           <SectionHeader
             title="Metrik Operasional"
-            description="Status armada dalam operasi hari ini"
+            
             action={
               <button
                 type="button"
                 onClick={() => toggleCard("metrics")}
-                className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+                className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
               >
                 Sembunyikan
               </button>
@@ -240,7 +228,7 @@ export function DashboardPage() {
               <button
                 type="button"
                 onClick={() => toggleCard("narrative")}
-                className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+                className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
               >
                 Sembunyikan
               </button>
@@ -255,7 +243,7 @@ export function DashboardPage() {
       )}
 
       {!visibleCards.metrics && !visibleCards.narrative && (
-        <div className="rounded-xl border border-dashed border-border bg-muted/30 p-6 text-center">
+        <div className=" border border-dashed border-border bg-muted/30 p-6 text-center">
           <p className="text-sm font-medium text-foreground">
             Semua panel tambahan disembunyikan
           </p>

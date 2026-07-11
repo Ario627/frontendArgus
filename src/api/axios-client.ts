@@ -35,7 +35,15 @@ apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 apiClient.interceptors.response.use(
   (response) => {
     const envelope = response.data as BackendSuccessEnvelope<unknown>;
-    response.data = envelope.data;
+    if (
+      envelope &&
+      typeof envelope === "object" &&
+      "success" in envelope &&
+      "data" in envelope &&
+      envelope.success === true
+    ) {
+      response.data = envelope.data;
+    }
     return response;
   },
   (error: AxiosError<BackendErrorEnvelope>) => {

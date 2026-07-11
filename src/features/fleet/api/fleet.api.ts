@@ -52,4 +52,11 @@ export const fleetApi = Object.freeze({
     );
     return response.data;
   },
+
+  exportCsv: async (): Promise<Blob> => {
+    const response = await apiClient.get(API_ENDPOINTS.fleet.exportCsv, {
+      responseType: "blob",
+    });
+    return response.data as Blob;
+  },
 });

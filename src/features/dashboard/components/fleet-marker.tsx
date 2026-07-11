@@ -1,6 +1,7 @@
-import { memo, useMemo } from "react";
-import { Marker, Tooltip } from "react-leaflet";
+import { memo, useMemo, useCallback } from "react";
+import { Marker, Tooltip, useMap } from "react-leaflet";
 import L from "leaflet";
+import { useNavigate } from "react-router-dom";
 import { useLiveStaleness } from "../../../shared/hooks/use-live-staleness";
 import {
   OPERATIONAL_STATUS_CONFIG,
@@ -11,13 +12,57 @@ import type { OperationalStatus } from "../../../shared/types/common.types";
 
 interface FleetMarkerProps {
   position: FleetPosition;
+  onShow3D?: (position: FleetPosition) => void;
 }
 
-const STATUS_SVG_ICONS: Readonly<Record<OperationalStatus, string>> = {
-  ONLINE_NORMAL: `<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26"><circle cx="13" cy="13" r="7" fill="hsl(var(--status-normal))" stroke="white" stroke-width="2.5"/><circle cx="13" cy="13" r="3" fill="white"/></svg>`,
-  ONLINE_BROKEN: `<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26"><circle cx="13" cy="13" r="7" fill="hsl(var(--status-broken))" stroke="white" stroke-width="2.5"/><path d="M10 10 L16 16 M16 10 L10 16" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>`,
-  STALE: `<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26"><circle cx="13" cy="13" r="7" fill="hsl(var(--status-stale))" stroke="white" stroke-width="2.5"/><circle cx="13" cy="13" r="2" fill="white"/></svg>`,
-  OFFLINE: `<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26"><circle cx="13" cy="13" r="7" fill="hsl(var(--status-offline))" stroke="white" stroke-width="2.5"/><path d="M9 13 L17 13" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>`,
+const TRUCK_SVG_ICONS: Readonly<Record<OperationalStatus, string>> = {
+  ONLINE_NORMAL: `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+    <g transform="translate(2, 6)">
+      <path d="M0 10 L0 22 L5 22 L5 25 L10 25 L10 22 L26 22 L26 25 L31 25 L31 22 L36 22 L36 10 Z" fill="hsl(var(--status-normal))" stroke="white" stroke-width="1.5"/>
+      <path d="M26 10 L26 16 L33 16 L33 10 Z" fill="rgba(255,255,255,0.4)" stroke="white" stroke-width="1"/>
+      <rect x="2" y="12" width="8" height="6" fill="rgba(255,255,255,0.2)" rx="1"/>
+      <circle cx="7.5" cy="25" r="3.5" fill="#333" stroke="white" stroke-width="1.5"/>
+      <circle cx="28.5" cy="25" r="3.5" fill="#333" stroke="white" stroke-width="1.5"/>
+      <circle cx="7.5" cy="25" r="1.5" fill="#888"/>
+      <circle cx="28.5" cy="25" r="1.5" fill="#888"/>
+    </g>
+  </svg>`,
+  ONLINE_BROKEN: `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+    <g transform="translate(2, 6)">
+      <path d="M0 10 L0 22 L5 22 L5 25 L10 25 L10 22 L26 22 L26 25 L31 25 L31 22 L36 22 L36 10 Z" fill="hsl(var(--status-broken))" stroke="white" stroke-width="1.5"/>
+      <path d="M26 10 L26 16 L33 16 L33 10 Z" fill="rgba(255,255,255,0.4)" stroke="white" stroke-width="1"/>
+      <rect x="2" y="12" width="8" height="6" fill="rgba(255,255,255,0.2)" rx="1"/>
+      <circle cx="7.5" cy="25" r="3.5" fill="#333" stroke="white" stroke-width="1.5"/>
+      <circle cx="28.5" cy="25" r="3.5" fill="#333" stroke="white" stroke-width="1.5"/>
+      <circle cx="7.5" cy="25" r="1.5" fill="#888"/>
+      <circle cx="28.5" cy="25" r="1.5" fill="#888"/>
+      <path d="M14 5 L22 13 M22 5 L14 13" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+    </g>
+  </svg>`,
+  STALE: `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+    <g transform="translate(2, 6)">
+      <path d="M0 10 L0 22 L5 22 L5 25 L10 25 L10 22 L26 22 L26 25 L31 25 L31 22 L36 22 L36 10 Z" fill="hsl(var(--status-stale))" stroke="white" stroke-width="1.5"/>
+      <path d="M26 10 L26 16 L33 16 L33 10 Z" fill="rgba(255,255,255,0.4)" stroke="white" stroke-width="1"/>
+      <rect x="2" y="12" width="8" height="6" fill="rgba(255,255,255,0.2)" rx="1"/>
+      <circle cx="7.5" cy="25" r="3.5" fill="#333" stroke="white" stroke-width="1.5"/>
+      <circle cx="28.5" cy="25" r="3.5" fill="#333" stroke="white" stroke-width="1.5"/>
+      <circle cx="7.5" cy="25" r="1.5" fill="#888"/>
+      <circle cx="28.5" cy="25" r="1.5" fill="#888"/>
+      <circle cx="18" cy="9" r="2" fill="white"/>
+    </g>
+  </svg>`,
+  OFFLINE: `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+    <g transform="translate(2, 6)">
+      <path d="M0 10 L0 22 L5 22 L5 25 L10 25 L10 22 L26 22 L26 25 L31 25 L31 22 L36 22 L36 10 Z" fill="hsl(var(--status-offline))" stroke="white" stroke-width="1.5" opacity="0.7"/>
+      <path d="M26 10 L26 16 L33 16 L33 10 Z" fill="rgba(255,255,255,0.3)" stroke="white" stroke-width="1"/>
+      <rect x="2" y="12" width="8" height="6" fill="rgba(255,255,255,0.15)" rx="1"/>
+      <circle cx="7.5" cy="25" r="3.5" fill="#555" stroke="white" stroke-width="1.5"/>
+      <circle cx="28.5" cy="25" r="3.5" fill="#555" stroke="white" stroke-width="1.5"/>
+      <circle cx="7.5" cy="25" r="1.5" fill="#777"/>
+      <circle cx="28.5" cy="25" r="1.5" fill="#777"/>
+      <path d="M12 14 L24 14" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+    </g>
+  </svg>`,
 };
 
 const iconCache = new Map<OperationalStatus, L.DivIcon>();
@@ -25,13 +70,13 @@ const iconCache = new Map<OperationalStatus, L.DivIcon>();
 function getMarkerIcon(operationalStatus: OperationalStatus): L.DivIcon {
   let icon = iconCache.get(operationalStatus);
   if (!icon) {
-    const svg = STATUS_SVG_ICONS[operationalStatus];
+    const svg = TRUCK_SVG_ICONS[operationalStatus];
     icon = L.divIcon({
       html: svg,
-      className: "fleet-marker-icon",
-      iconSize: [26, 26],
-      iconAnchor: [13, 13],
-      popupAnchor: [0, -12],
+      className: "fleet-marker-icon fleet-truck-marker",
+      iconSize: [40, 40],
+      iconAnchor: [20, 32],
+      popupAnchor: [0, -28],
     });
     iconCache.set(operationalStatus, icon);
   }
@@ -65,7 +110,11 @@ function TooltipRow({
   );
 }
 
-function FleetMarkerInner({ position }: FleetMarkerProps) {
+const ZOOM_3D_THRESHOLD = 15;
+
+function FleetMarkerInner({ position, onShow3D }: FleetMarkerProps) {
+  const navigate = useNavigate();
+  const map = useMap();
   const staleness = useLiveStaleness(position.lastDeviceTimestamp);
 
   const statusConfig = OPERATIONAL_STATUS_CONFIG[position.operationalStatus];
@@ -77,18 +126,37 @@ function FleetMarkerInner({ position }: FleetMarkerProps) {
 
   const isStale = !position.isRealTime || staleness > 180;
 
+  const handleMarkerClick = useCallback(() => {
+    const currentZoom = map.getZoom();
+    if (currentZoom >= ZOOM_3D_THRESHOLD && onShow3D) {
+      onShow3D(position);
+    } else {
+      map.flyTo([position.latitude, position.longitude], ZOOM_3D_THRESHOLD + 2, {
+        duration: 1,
+      });
+    }
+  }, [map, position, onShow3D]);
+
+  const handleMarkerDblClick = useCallback(() => {
+    navigate(`/app/fleet/${position.fleetId}`);
+  }, [navigate, position.fleetId]);
+
   return (
     <Marker
       position={[position.latitude, position.longitude]}
       icon={markerIcon}
+      eventHandlers={{
+        click: handleMarkerClick,
+        dblclick: handleMarkerDblClick,
+      }}
     >
       <Tooltip
         direction="top"
-        offset={[0, -14]}
+        offset={[0, -20]}
         opacity={1}
         className="fleet-tooltip"
       >
-        <div className="min-w-50 p-1">
+        <div className="min-w-52 p-1">
           <div className="mb-2 flex items-center justify-between border-b border-border pb-2">
             <span className="font-semibold text-foreground">
               {position.plateNumber}
@@ -113,7 +181,7 @@ function FleetMarkerInner({ position }: FleetMarkerProps) {
               </span>
             </TooltipRow>
             {!position.isRealTime && (
-              <div className="mt-2 flex items-center gap-1.5 rounded-md bg-warning/10 px-2 py-1 text-warning">
+              <div className="mt-2 flex items-center gap-1.5 bg-warning/10 px-2 py-1 text-warning">
                 <svg
                   className="h-3.5 w-3.5"
                   fill="none"
@@ -133,6 +201,11 @@ function FleetMarkerInner({ position }: FleetMarkerProps) {
                 </span>
               </div>
             )}
+            <div className="mt-2 border-t border-border pt-2">
+              <p className="text-[10px] text-muted-foreground text-center">
+                <span className="font-medium">Klik:</span> Zoom / Lihat 3D • <span className="font-medium">Double-klik:</span> Detail
+              </p>
+            </div>
           </div>
         </div>
       </Tooltip>
@@ -149,7 +222,8 @@ function areMarkersEqual(prev: FleetMarkerProps, next: FleetMarkerProps): boolea
     prev.position.plateNumber === next.position.plateNumber &&
     prev.position.volumePercent === next.position.volumePercent &&
     prev.position.isRealTime === next.position.isRealTime &&
-    prev.position.lastDeviceTimestamp === next.position.lastDeviceTimestamp
+    prev.position.lastDeviceTimestamp === next.position.lastDeviceTimestamp &&
+    prev.position.fleetId === next.position.fleetId
   );
 }
 

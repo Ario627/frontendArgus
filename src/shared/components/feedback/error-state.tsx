@@ -27,14 +27,14 @@ export function ErrorState({
     <div
       className={cn(
         "flex flex-col items-center justify-center text-center",
-        isPage ? "min-h-[400px] rounded-lg border border-border bg-background p-8" : "rounded-lg border border-destructive/20 bg-destructive/5 p-6",
+        isPage ? "min-h-[400px]  border border-border bg-background p-8" : " border border-destructive/20 bg-destructive/5 p-6",
         className,
       )}
       role="alert"
       aria-live="assertive"
     >
       <div className={cn(
-        "flex h-12 w-12 items-center justify-center rounded-full",
+        "flex h-12 w-12 items-center justify-center border",
         isPage ? "bg-destructive/10" : "bg-destructive/20",
       )}>
         <AlertCircleIcon className="h-6 w-6 text-destructive" aria-hidden />
@@ -52,7 +52,7 @@ export function ErrorState({
           onClick={onRetry}
           disabled={isRetrying}
           className={cn(
-            "mt-6 inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+            "mt-6 inline-flex items-center gap-2  px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
             "bg-brand text-brand-foreground hover:bg-brand/90",
             "disabled:pointer-events-none disabled:opacity-50",
           )}
@@ -90,12 +90,12 @@ export function ForbiddenError({ className }: ForbiddenErrorProps) {
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center rounded-lg border border-border bg-background p-8 text-center",
+        "flex flex-col items-center justify-center  border border-border bg-background p-8 text-center",
         className,
       )}
       role="alert"
     >
-      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-status-offline/10">
+      <div className="flex h-12 w-12 items-center justify-center inline-flex border border-status-offline bg-status-offline/10">
         <AlertCircleIcon className="h-6 w-6 text-status-offline" aria-hidden />
       </div>
       <h3 className="mt-4 text-sm font-semibold text-foreground">Akses Ditolak</h3>

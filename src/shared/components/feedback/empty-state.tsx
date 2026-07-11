@@ -20,11 +20,11 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center rounded-lg border border-dashed border-border bg-muted/20 px-6 py-12 text-center",
+        "flex flex-col items-center justify-center  border border-dashed border-border bg-muted/20 px-6 py-12 text-center",
         className,
       )}
     >
-      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+      <div className="flex h-12 w-12 items-center justify-center inline-flex border border-border bg-muted">
         <Icon className="h-6 w-6 text-muted-foreground" aria-hidden />
       </div>
       <h3 className="mt-4 text-sm font-medium text-foreground">{title}</h3>
@@ -55,7 +55,7 @@ export function EmptyStateWithCTA({
         <button
           type="button"
           onClick={onCtaClick}
-          className="rounded-md bg-brand px-4 py-2 text-sm font-medium text-brand-foreground transition-colors hover:bg-brand/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className=" bg-brand px-4 py-2 text-sm font-medium text-brand-foreground transition-colors hover:bg-brand/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           {ctaLabel}
         </button>

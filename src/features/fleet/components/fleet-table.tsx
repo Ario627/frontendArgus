@@ -208,7 +208,7 @@ export function FleetTable({
         canModify ? "Belum ada armada terdaftar." : "Belum ada data armada."
       }
       getRowKey={(row) => row.id}
-      onRowClick={(row) => navigate(`/fleet/${row.id}`)}
+      onRowClick={(row) => navigate(`/app/fleet/${row.id}`)}
       className="w-full"
     />
   );

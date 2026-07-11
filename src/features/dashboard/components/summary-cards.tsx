@@ -122,8 +122,8 @@ function SummaryCard({
   return (
     <div
       className={cn(
-        "group relative overflow-hidden rounded-xl border border-border bg-card p-4 shadow-sm transition-all duration-200",
-        "hover:-translate-y-0.5 hover:border-border/80 hover:shadow-md",
+        "group relative overflow-hidden  border border-border bg-card p-4  transition-all duration-200",
+        " hover:border-border/80 hover:",
       )}
     >
       <div className="flex items-start justify-between">
@@ -131,7 +131,7 @@ function SummaryCard({
           <div className="flex items-center gap-2">
             <span
               className={cn(
-                "inline-flex h-8 w-8 items-center justify-center rounded-lg transition-colors",
+                "inline-flex h-8 w-8 items-center justify-center  transition-colors",
                 styles.iconBg,
               )}
               aria-hidden
@@ -165,7 +165,7 @@ function SummaryCard({
       </div>
       <div
         className={cn(
-          "absolute -bottom-6 -right-6 h-24 w-24 rounded-full opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-40",
+          "",
           styles.iconBg.replace("/10", "/30"),
         )}
         aria-hidden
@@ -177,12 +177,12 @@ function SummaryCard({
 function SummarySkeleton() {
   return (
     <div
-      className="rounded-xl border border-border bg-card p-4 shadow-sm"
+      className=" border border-border bg-card p-4 "
       aria-hidden
     >
       <div className="flex items-start justify-between">
         <div className="space-y-3">
-          <Skeleton className="h-8 w-8 rounded-lg" />
+          <Skeleton className="h-8 w-8 " />
           <div>
             <Skeleton className="h-8 w-20" />
             <Skeleton className="mt-2 h-3.5 w-24" />
@@ -223,7 +223,7 @@ export function SummaryCards({
     return (
       <div
         className={cn(
-          "flex flex-col items-start gap-2 rounded-xl border border-destructive/20 bg-destructive/5 p-5",
+          "flex flex-col items-start gap-2  border border-destructive/20 bg-destructive/5 p-5",
           className,
         )}
         role="status"

@@ -34,14 +34,14 @@ export function LlmSummaryBanner({
     return (
       <div
         className={cn(
-          "rounded-xl border border-border bg-card p-5 shadow-sm",
+          " border border-border bg-card p-5 ",
           className,
         )}
         aria-busy="true"
         aria-live="polite"
       >
         <div className="flex items-center gap-2.5">
-          <Skeleton className="h-6 w-6 rounded-md" />
+          <Skeleton className="h-6 w-6 " />
           <Skeleton className="h-4 w-36" />
         </div>
         <Skeleton className="mt-4 h-4 w-full" />
@@ -55,7 +55,7 @@ export function LlmSummaryBanner({
     return (
       <div
         className={cn(
-          "flex items-start gap-3 rounded-xl border border-dashed border-border bg-muted/30 p-5",
+          "flex items-start gap-3  border border-dashed border-border bg-muted/30 p-5",
           className,
         )}
         role="status"
@@ -82,20 +82,20 @@ export function LlmSummaryBanner({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-xl border border-brand/15 bg-linear-to-br from-brand-soft via-card to-card p-5 shadow-sm",
+        "relative overflow-hidden  border border-brand/15 bg-linear-to-br from-brand-soft via-card to-card p-5 ",
         className,
       )}
       role="status"
       aria-live="polite"
     >
       <div
-        className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-brand/5 blur-3xl"
+        className=""
         aria-hidden
       />
       <div className="relative">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-brand/10 text-brand">
+            <span className="inline-flex h-7 w-7 items-center justify-center  bg-brand/10 text-brand">
               <SparklesIcon className="h-4 w-4" aria-hidden />
             </span>
             <p className="text-sm font-semibold text-foreground">

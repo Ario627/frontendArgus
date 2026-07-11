@@ -140,7 +140,7 @@ export function DestinationListPage() {
         )}
       </div>
 
-      <div className="flex flex-wrap items-center gap-3 rounded-lg border border-border bg-background p-3">
+      <div className="flex flex-wrap items-center gap-3  border border-border bg-background p-3">
         <div className="relative flex-1 min-w-50">
           <Search
             className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
@@ -152,7 +152,7 @@ export function DestinationListPage() {
             onChange={(e) => handleSearchChange(e.target.value)}
             placeholder="Cari nama destinasi..."
             className={cn(
-              "h-10 w-full rounded-md border border-border bg-transparent pl-9 pr-3 text-sm",
+              "h-10 w-full  border border-border bg-transparent pl-9 pr-3 text-sm",
               "placeholder:text-muted-foreground",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
             )}
@@ -165,7 +165,7 @@ export function DestinationListPage() {
             value={typeFilter}
             onChange={(e) => handleTypeChange(e.target.value as TypeFilter)}
             className={cn(
-              "h-10 appearance-none rounded-md border border-border bg-transparent pl-3 pr-8 text-sm",
+              "h-10 appearance-none  border border-border bg-transparent pl-3 pr-8 text-sm",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
             )}
             aria-label="Filter tipe"

@@ -21,7 +21,7 @@ function StatusBadge({ status }: { status: OptimizationOutput["status"] }) {
   } as const;
   const cfg = config[status];
   return (
-    <span className={`inline-flex rounded-md px-2 py-0.5 text-xs font-medium ${cfg.className}`}>
+    <span className={`inline-flex  px-2 py-0.5 text-xs font-medium ${cfg.className}`}>
       {cfg.label}
     </span>
   );
@@ -34,7 +34,7 @@ interface ResultPanelProps {
 function ResultPanel({ result }: ResultPanelProps) {
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-center gap-3 rounded-lg border border-border bg-muted/30 p-4">
+      <div className="flex flex-wrap items-center gap-3  border border-border bg-muted/30 p-4">
         <StatusBadge status={result.status} />
         <span className="inline-flex items-center gap-1.5 text-sm text-muted-foreground">
           <ClockIcon className="h-4 w-4" />
@@ -71,12 +71,12 @@ export function OptimizationPage() {
     <div className="space-y-6 p-6">
       <header className="flex flex-col gap-2 border-b border-border pb-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand/10">
+          <div className="flex h-10 w-10 items-center justify-center  bg-brand/10">
             <RouteIcon className="h-5 w-5 text-brand" aria-hidden />
           </div>
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-foreground">
-              Optimasi Rute Harian
+              Optimasi Rute
             </h1>
             <p className="text-sm text-muted-foreground">
               Jalankan perencanaan rute armada untuk hari ini
@@ -96,9 +96,9 @@ export function OptimizationPage() {
 
       {mutation.isPending && !mutation.data && (
         <div className="space-y-4">
-          <Skeleton className="h-20 w-full rounded-lg" />
-          <Skeleton className="h-64 w-full rounded-lg" />
-          <Skeleton className="h-96 w-full rounded-lg" />
+          <Skeleton className="h-20 w-full " />
+          <Skeleton className="h-64 w-full " />
+          <Skeleton className="h-96 w-full " />
         </div>
       )}
 

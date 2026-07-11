@@ -6,6 +6,12 @@ export const queryKeys = {
     list: (filters?: FleetFilters) => ["fleet", "list", filters] as const,
     detail: (id: string) => ["fleet", "detail", id] as const,
   },
+  device: {
+    all: ["device"] as const,
+    list: (status?: string) => ["device", "list", status] as const,
+    unassigned: ["device", "unassigned"] as const,
+    detail: (deviceId: string) => ["device", "detail", deviceId] as const,
+  },
   destination: {
     all: ["destination"] as const,
     list: () => ["destination", "list"] as const,

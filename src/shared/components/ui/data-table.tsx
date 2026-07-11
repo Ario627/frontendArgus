@@ -82,7 +82,7 @@ export function DataTable<T>({
     return (
       <div
         className={cn(
-          "overflow-hidden rounded-lg border border-border",
+          "overflow-hidden  border border-border",
           className,
         )}
         aria-busy="true"
@@ -104,7 +104,7 @@ export function DataTable<T>({
     return (
       <div
         className={cn(
-          "flex flex-col items-center justify-center rounded-lg border border-border bg-background p-8",
+          "flex flex-col items-center justify-center  border border-border bg-background p-8",
           className,
         )}
         role="alert"
@@ -114,7 +114,7 @@ export function DataTable<T>({
           <button
             type="button"
             onClick={onRetry}
-            className="rounded-md bg-brand px-4 py-2 text-sm font-medium text-brand-foreground hover:bg-brand/90"
+            className=" bg-brand px-4 py-2 text-sm font-medium text-brand-foreground hover:bg-brand/90"
           >
             Coba Lagi
           </button>
@@ -127,7 +127,7 @@ export function DataTable<T>({
     return (
       <div
         className={cn(
-          "flex flex-col items-center justify-center rounded-lg border border-border bg-background p-8",
+          "flex flex-col items-center justify-center  border border-border bg-background p-8",
           className,
         )}
       >
@@ -140,7 +140,7 @@ export function DataTable<T>({
     return (
       <div
         className={cn(
-          "overflow-hidden rounded-lg border border-border",
+          "overflow-hidden  border border-border",
           className,
         )}
       >
@@ -177,7 +177,7 @@ export function DataTable<T>({
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-lg border border-border",
+        "overflow-hidden  border border-border",
         className,
       )}
     >

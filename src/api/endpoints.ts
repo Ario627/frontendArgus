@@ -10,6 +10,8 @@ export const API_ENDPOINTS = Object.freeze({
     update: (id: string) => `/fleet/${id}` as const,
     remove: (id: string) => `/fleet/${id}` as const,
     revokeDevice: (id: string) => `/fleet/${id}/revoke-device` as const,
+    assignDevice: (fleetId: string) => `/device/fleet/${fleetId}/assign` as const,
+    exportCsv: "/fleet/export/csv",
   },
   destination: {
     list: "/destination",

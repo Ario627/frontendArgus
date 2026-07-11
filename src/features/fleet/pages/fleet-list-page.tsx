@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
-import { Plus } from "lucide-react";
+import { Plus, Download } from "lucide-react";
+import { toast } from "sonner";
 import { FleetTable } from "../components/fleet-table";
 import { FleetFilterBar } from "../components/fleet-filter-bar";
 import { FleetForm } from "../components/fleet-form";
@@ -14,6 +15,7 @@ import { useUpdateFleet } from "../hooks/use-update-fleet";
 import { useDeleteFleet } from "../hooks/use-delete-fleet";
 import { useRevokeDevice } from "../hooks/use-revoke-device";
 import { useAuthStore } from "../../auth/store/auth.store";
+import { fleetApi } from "../api/fleet.api";
 import type { Fleet } from "../../../shared/types/fleet.types";
 import type { CreateFleetFormValues } from "../schemas/create-fleet.schema";
 import type { UpdateFleetFormValues } from "../schemas/update-fleet.schema";
@@ -32,6 +34,7 @@ export function FleetListPage() {
   const [selectedFleet, setSelectedFleet] = useState<Fleet | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [revokeDialogOpen, setRevokeDialogOpen] = useState(false);
+  const [exporting, setExporting] = useState(false);
 
   const createMutation = useCreateFleet();
   const updateMutation = useUpdateFleet({ id: selectedFleet?.id ?? "" });
@@ -56,6 +59,26 @@ export function FleetListPage() {
   const handleCloseDialog = useCallback(() => {
     setDialogMode(null);
     setSelectedFleet(null);
+  }, []);
+
+  const handleExportCsv = useCallback(async () => {
+    setExporting(true);
+    try {
+      const blob = await fleetApi.exportCsv();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `fleet-export-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      toast.success("File CSV berhasil diunduh");
+    } catch {
+      toast.error("Gagal mengunduh file CSV");
+    } finally {
+      setExporting(false);
+    }
   }, []);
 
   const handleCreateSubmit = (values: CreateFleetFormValues) => {
@@ -89,12 +112,25 @@ export function FleetListPage() {
     <div className="space-y-4 p-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-foreground">Manajemen Armada</h1>
-        {canModify && (
-          <Button onClick={() => setDialogMode("create")}>
-            <Plus className="h-4 w-4" />
-            Tambah Armada
-          </Button>
-        )}
+        <div className="flex items-center gap-2">
+          {canModify && (
+            <>
+              <Button
+                variant="outline"
+                className="cursor-pointer"
+                onClick={handleExportCsv}
+                disabled={exporting}
+              >
+                <Download className="h-4 w-4" />
+                {exporting ? "Mengunduh..." : "Export CSV"}
+              </Button>
+              <Button className="cursor-pointer" onClick={() => setDialogMode("create")}>
+                <Plus className="h-4 w-4" />
+                Tambah Armada
+              </Button>
+            </>
+          )}
+        </div>
       </div>
 
       <FleetFilterBar

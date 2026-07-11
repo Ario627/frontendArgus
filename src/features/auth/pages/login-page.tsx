@@ -35,15 +35,13 @@ export function LoginPage() {
   return (
     <div className="flex min-h-screen bg-background">
       <section
-        className="relative hidden w-1/2 flex-col justify-between overflow-hidden bg-brand p-10 text-brand-foreground lg:flex xl:p-14"
+        className="relative hidden w-1/2 flex-col justify-between overflow-hidden bg-brand p-10 text-brand-foreground lg:flex xl:p-9"
         aria-label="Informasi produk ARGUS"
       >
         <div
-          className="absolute left-0 top-0 h-64 w-64 rounded-full bg-brand-foreground/5 blur-3xl animate-drift"
           aria-hidden
         />
         <div
-          className="absolute bottom-10 right-10 h-80 w-80 rounded-full bg-brand-foreground/5 blur-3xl animate-drift"
           style={{ animationDelay: "7s" }}
           aria-hidden
         />
@@ -58,7 +56,7 @@ export function LoginPage() {
 
         <div className="relative space-y-8">
           <div
-            className="animate-fade-in-up inline-flex items-center gap-2 rounded-full bg-brand-foreground/10 px-3 py-1 text-xs font-medium"
+            className="animate-fade-in-up inline-flex items-center gap-2 inline-flex border border-brand-foreground/20 bg-brand-foreground/10 px-3 py-1 text-xs font-medium"
             style={{ animationDelay: "0.1s" }}
           >
             <Leaf className="h-3.5 w-3.5" />
@@ -88,7 +86,7 @@ export function LoginPage() {
                 className="animate-fade-in-up flex items-start gap-4"
                 style={{ animationDelay: `${0.4 + index * 0.1}s` }}
               >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-foreground/10 transition-transform duration-300 hover:scale-105">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center  bg-brand-foreground/10 transition-transform duration-300 ">
                   <item.icon className="h-5 w-5" />
                 </div>
                 <div>
@@ -110,7 +108,7 @@ export function LoginPage() {
 
       <section className="flex w-full flex-col justify-center px-6 py-12 sm:px-12 lg:w-1/2 lg:px-16 xl:px-24">
         <div
-          className="absolute right-0 top-0 -z-10 h-48 w-48 rounded-full bg-brand/5 blur-3xl sm:h-64 sm:w-64"
+          className=""
           aria-hidden
         />
 
@@ -138,7 +136,7 @@ export function LoginPage() {
           </div>
 
           <div
-            className="animate-fade-in-up rounded-2xl border border-border bg-card p-6 shadow-lg sm:p-8"
+            className="animate-fade-in-up  border border-border bg-card p-6  sm:p-8"
             style={{ animationDelay: "0.2s" }}
           >
             <LoginForm />

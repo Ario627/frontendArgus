@@ -66,26 +66,25 @@ export function AppShell({
   return (
     <div className="flex h-screen flex-col bg-background">
       {!isOnline && (
-        <div className="flex items-center justify-center gap-2 bg-destructive/10 px-4 py-2 text-xs font-medium text-destructive">
-          <span className="h-2 w-2 rounded-full bg-destructive" aria-hidden />
-          Anda sedang offline — data mungkin tidak terbaru
+        <div className="flex items-center justify-center gap-2 border-b border-destructive/40 bg-destructive/10 px-4 py-1.5 font-mono-readout text-xs uppercase tracking-wide text-destructive">
+          <span className="h-2 w-2 bg-destructive" aria-hidden />
+          OFFLINE — data mungkin tidak terbaru
         </div>
       )}
 
       <div className="flex flex-1 overflow-hidden">
         <aside className="hidden w-60 shrink-0 flex-col border-r border-border bg-card lg:flex">
-          <div className="flex h-16 items-center border-b border-border px-5">
+          <div className="flex h-14 items-center border-b border-border px-5">
             <div className="flex items-center gap-2.5">
-              <div>
-                <span className="text-lg font-bold tracking-tight text-foreground">
-                  ARGUS
-                </span>
-              </div>
+              
+              <span className="text-lg font-bold uppercase tracking-widest text-foreground">
+                ARGUS
+              </span>
             </div>
           </div>
 
           <nav
-            className="flex-1 space-y-1 px-3 py-4"
+            className="flex-1 space-y-0.5 px-2 py-3"
             aria-label="Navigasi utama"
           >
             {visibleItems.map(({ to, label, icon }) => {
@@ -97,20 +96,20 @@ export function AppShell({
                   key={to}
                   to={to}
                   className={cn(
-                    "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
+                    "flex items-center gap-3 px-3 py-2 text-xs font-medium uppercase tracking-wide transition-colors duration-150",
                     isActive
-                      ? "bg-brand/10 text-brand shadow-sm shadow-brand/5"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                      ? "border-l-2 border-brand bg-brand/5 text-brand"
+                      : "border-l-2 border-transparent text-muted-foreground hover:bg-muted hover:text-foreground",
                   )}
                 >
                   <Icon
                     name={icon}
-                    size={18}
+                    size={16}
                     className={cn(
                       "transition-colors",
                       isActive
                         ? "text-brand"
-                        : "text-muted-foreground group-hover:text-foreground",
+                        : "text-muted-foreground",
                     )}
                   />
                   {label}
@@ -119,40 +118,40 @@ export function AppShell({
             })}
           </nav>
 
-          <div className="border-t border-border p-3">
-            <div className="mb-2 rounded-lg bg-muted/50 px-3 py-2">
-              <p className="truncate text-xs font-medium text-foreground">
+          <div className="border-t border-border p-2">
+            <div className="mb-1 border border-border bg-muted/50 px-3 py-2">
+              <p className="truncate font-mono-readout text-xs font-medium text-foreground">
                 {userName}
               </p>
-              <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+              <p className="font-mono-readout text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
                 {userRole}
               </p>
             </div>
             <button
               type="button"
               onClick={handleLogout}
-              className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-destructive"
+              className="flex w-full items-center gap-3 px-3 py-2 text-xs font-medium uppercase tracking-wide text-muted-foreground transition-colors hover:bg-muted hover:text-destructive cursor-pointer"
             >
-              <Icon name="logout" size={18} />
+              <Icon name="logout" size={16} />
               Keluar
             </button>
           </div>
         </aside>
 
         <div className="flex flex-1 flex-col overflow-hidden">
-          <header className="flex h-16 shrink-0 items-center justify-between border-b border-border bg-card/50 px-6 backdrop-blur-sm">
+          <header className="flex h-14 shrink-0 items-center justify-between border-b border-border bg-card px-4">
             <div className="flex items-center gap-2 lg:hidden">
-              <div className="flex h-7 w-7 items-center justify-center rounded-md bg-brand text-brand-foreground">
-                <Icon name="truck" size={14} />
+              <div className="flex h-6 w-6 items-center justify-center border border-brand bg-brand/10">
+                <Icon name="truck" size={14} className="text-brand" />
               </div>
-              <span className="text-sm font-bold text-foreground">ARGUS</span>
+              <span className="text-sm font-bold uppercase tracking-widest text-foreground">ARGUS</span>
             </div>
             <div className="hidden lg:block" />
             <HealthIndicator />
           </header>
 
           <main
-            className="flex-1 overflow-y-auto bg-background p-4 sm:p-6 lg:p-8"
+            className="flex-1 overflow-y-auto bg-background p-3 sm:p-4 lg:p-6"
             aria-busy={false}
           >
             <Outlet />

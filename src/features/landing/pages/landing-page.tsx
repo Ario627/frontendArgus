@@ -8,7 +8,6 @@ import {
   Recycle,
   Route,
   ShieldAlert,
-  Truck,
   Zap,
 } from "lucide-react";
 import { Button } from "../../../shared/components/ui/button";
@@ -165,7 +164,7 @@ export function LandingPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-border bg-background/80 ">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3.5">
           <BrandMark />
           <nav className="hidden items-center gap-7 text-sm font-medium text-muted-foreground md:flex">
@@ -210,11 +209,10 @@ export function LandingPage() {
 
           {/* Animated decorative blobs */}
           <div
-            className="absolute left-[10%] top-10 h-72 w-72 rounded-full bg-brand/10 blur-3xl animate-drift"
+            className="absolute left-[10%] top-10 h-72 w-72 inline-flex border border-brand bg-brand/10  animate-drift"
             aria-hidden
           />
           <div
-            className="absolute right-[15%] top-32 h-96 w-96 rounded-full bg-brand/8 blur-3xl animate-drift"
             style={{ animationDelay: "5s" }}
             aria-hidden
           />
@@ -222,7 +220,7 @@ export function LandingPage() {
           <div className="relative mx-auto max-w-7xl px-6 py-20 sm:py-28 lg:py-32">
             <div className="grid items-center gap-12 lg:grid-cols-2">
               <div className="text-center lg:text-left">
-                <div className="mb-6 inline-flex animate-fade-in items-center gap-2 rounded-full border border-border bg-background/70 px-4 py-1.5 text-xs font-medium text-muted-foreground shadow-sm backdrop-blur">
+                <div className="mb-6 inline-flex animate-fade-in items-center gap-2 bg-card border border-border bg-background/70 px-4 py-1.5 text-xs font-medium text-muted-foreground  backdrop-blur">
                   <Leaf className="h-3.5 w-3.5 text-brand" aria-hidden />
                   Solusi pengelolaan armada sampah berbasis AI
                 </div>
@@ -266,9 +264,9 @@ export function LandingPage() {
                 className="animate-slide-in-left relative hidden lg:block"
                 style={{ animationDelay: "0.4s" }}
               >
-                <div className="relative overflow-hidden rounded-3xl border border-border bg-card p-8 shadow-xl">
+                <div className="relative overflow-hidden  border border-border bg-card p-8 ">
                   <div className="mb-4 flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-soft text-brand">
+                    <div className="flex h-10 w-10 items-center justify-center  bg-brand-soft text-brand">
                       <Route className="h-5 w-5" aria-hidden />
                     </div>
                     <div>
@@ -284,19 +282,19 @@ export function LandingPage() {
                     <RouteAnimation />
                   </div>
                   <div className="mt-4 grid grid-cols-3 gap-3">
-                    <div className="rounded-lg bg-muted p-3 text-center">
+                    <div className=" bg-muted p-3 text-center">
                       <p className="text-lg font-bold text-brand">5</p>
                       <p className="text-[10px] text-muted-foreground">
                         Titik Jemput
                       </p>
                     </div>
-                    <div className="rounded-lg bg-muted p-3 text-center">
+                    <div className=" bg-muted p-3 text-center">
                       <p className="text-lg font-bold text-brand">12.4km</p>
                       <p className="text-[10px] text-muted-foreground">
                         Total Rute
                       </p>
                     </div>
-                    <div className="rounded-lg bg-muted p-3 text-center">
+                    <div className=" bg-muted p-3 text-center">
                       <p className="text-lg font-bold text-brand">87%</p>
                       <p className="text-[10px] text-muted-foreground">
                         Efisiensi
@@ -324,10 +322,10 @@ export function LandingPage() {
             {features.map((feature) => (
               <div
                 key={feature.title}
-                className="group animate-fade-in-up rounded-2xl border border-border bg-card p-7 transition-all duration-300 hover:-translate-y-1 hover:border-brand/30 hover:shadow-xl"
+                className="group animate-fade-in-up  border border-border bg-card p-7 transition-all duration-300  hover:"
                 style={{ animationDelay: feature.delay }}
               >
-                <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-brand-soft text-brand transition-transform duration-300 group-hover:scale-110">
+                <div className="mb-5 flex h-11 w-11 items-center justify-center  bg-brand-soft text-brand transition-transform duration-300 group-">
                   <feature.icon className="h-5 w-5" aria-hidden />
                 </div>
                 <h3 className="mb-2.5 text-lg font-semibold text-foreground">
@@ -368,7 +366,7 @@ export function LandingPage() {
                       aria-hidden
                     />
                   )}
-                  <div className="relative flex h-12 w-12 items-center justify-center rounded-full border border-border bg-background text-sm font-semibold text-brand shadow-sm transition-colors duration-300 hover:border-brand/40">
+                  <div className="relative flex h-12 w-12 items-center justify-center bg-card border border-border bg-background text-sm font-semibold text-brand  transition-colors duration-300">
                     {step.number}
                   </div>
                   <h3 className="mb-2 mt-5 text-lg font-semibold text-foreground">
@@ -398,7 +396,7 @@ export function LandingPage() {
             {metrics.map((metric, index) => (
               <div
                 key={metric.label}
-                className="animate-fade-in-up rounded-2xl border border-border bg-card p-6 text-center transition-all duration-300 hover:shadow-lg"
+                className="animate-fade-in-up  border border-border bg-card p-6 text-center transition-all duration-300 hover:"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div className="text-3xl font-bold text-brand sm:text-4xl">
@@ -437,7 +435,7 @@ export function LandingPage() {
             ].map((tech, index) => (
               <div
                 key={tech.label}
-                className="animate-fade-in-up flex flex-col items-center gap-2 rounded-xl border border-border bg-card px-4 py-5 text-center transition-all duration-300 hover:-translate-y-0.5 hover:border-brand/20 hover:shadow-md"
+                className="animate-fade-in-up flex flex-col items-center gap-2  border border-border bg-card px-4 py-5 text-center transition-all duration-300  hover:"
                 style={{ animationDelay: `${index * 0.08}s` }}
               >
                 <tech.icon
@@ -454,7 +452,7 @@ export function LandingPage() {
 
         {/* CTA */}
         <section className="mx-auto max-w-7xl px-6 pb-24">
-          <div className="relative overflow-hidden rounded-3xl bg-brand px-8 py-14 text-center sm:px-16 sm:py-18">
+          <div className="relative overflow-hidden  bg-brand px-8 py-14 text-center sm:px-16 sm:py-18">
             <div
               className="absolute left-0 top-0 h-full w-1/3 bg-linear-to-r from-white/5 to-transparent"
               aria-hidden

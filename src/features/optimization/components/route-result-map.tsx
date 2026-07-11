@@ -77,7 +77,7 @@ export function RouteResultMap({ routes, isLoading, className }: RouteResultMapP
     return (
       <div
         className={cn(
-          "relative h-100 w-full overflow-hidden rounded-lg border border-border",
+          "relative h-100 w-full overflow-hidden  border border-border",
           className,
         )}
       >
@@ -106,7 +106,7 @@ export function RouteResultMap({ routes, isLoading, className }: RouteResultMapP
   return (
     <div
       className={cn(
-        "relative h-100 w-full overflow-hidden rounded-lg border border-border",
+        "relative h-100 w-full overflow-hidden  border border-border",
         className,
       )}
     >

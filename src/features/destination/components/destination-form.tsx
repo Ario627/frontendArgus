@@ -74,7 +74,7 @@ function FormField({
         step={type === "number" ? "any" : undefined}
         {...register(name)}
         className={cn(
-          "flex h-10 w-full rounded-md border border-border bg-transparent px-3 py-2 text-sm",
+          "flex h-10 w-full  border border-border bg-transparent px-3 py-2 text-sm",
           "placeholder:text-muted-foreground",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
           error && "border-destructive",
@@ -133,7 +133,7 @@ export function DestinationForm({
           id="dest-type"
           {...register("type")}
           className={cn(
-            "flex h-10 w-full rounded-md border border-border bg-transparent px-3 py-2 text-sm",
+            "flex h-10 w-full  border border-border bg-transparent px-3 py-2 text-sm",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
             errors.type && "border-destructive",
           )}

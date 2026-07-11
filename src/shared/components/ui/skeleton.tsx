@@ -8,7 +8,7 @@ export function Skeleton({ className }: SkeletonProps) {
   return (
     <div
       className={cn(
-        "animate-pulse rounded-md bg-muted",
+        "animate-pulse bg-muted",
         className,
       )}
       aria-hidden
@@ -38,11 +38,11 @@ export function SkeletonText({
 export function SkeletonCard({ className }: { className?: string }) {
   return (
     <div
-      className={cn("rounded-xl border border-border bg-card p-5 shadow-sm", className)}
+      className={cn("border border-border bg-card p-5", className)}
       aria-hidden
     >
       <div className="flex items-start justify-between">
-        <Skeleton className="h-8 w-8 rounded-lg" />
+        <Skeleton className="h-8 w-8" />
         <Skeleton className="h-2 w-2 rounded-full" />
       </div>
       <Skeleton className="mt-4 h-7 w-20" />
@@ -80,7 +80,7 @@ export function SkeletonTable({
 }) {
   return (
     <div
-      className={cn("overflow-hidden rounded-xl border border-border bg-card shadow-sm", className)}
+      className={cn("overflow-hidden border border-border bg-card", className)}
       aria-busy="true"
       aria-live="polite"
     >

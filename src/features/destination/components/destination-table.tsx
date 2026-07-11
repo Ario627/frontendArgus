@@ -34,7 +34,7 @@ function DestinationTypeBadge({ type }: { type: DestinationType }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+        "inline-flex items-center px-2.5 py-0.5 text-xs font-medium",
         DESTINATION_TYPE_BADGE_CLASSES[type],
       )}
     >
@@ -148,7 +148,7 @@ export function DestinationTable({
         key: "priority",
         header: "Prioritas",
         accessor: (row) => (
-          <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-muted text-xs font-medium">
+          <span className="inline-flex h-6 w-6 items-center justify-center inline-flex border border-border bg-muted text-xs font-medium">
             {row.priority}
           </span>
         ),
@@ -160,7 +160,7 @@ export function DestinationTable({
         accessor: (row) => (
           <span
             className={cn(
-              "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium",
+              "inline-flex items-center px-2 py-0.5 text-xs font-medium",
               row.lowVolumeFlag
                 ? "bg-status-stale/20 text-status-stale"
                 : "bg-status-normal/20 text-status-normal",
