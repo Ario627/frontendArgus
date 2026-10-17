@@ -21,8 +21,8 @@ function RecoveryTriggerButtonInner({
       onClick={() => onTrigger(brokenFleetId)}
       loading={isTriggering}
       disabled={disabled ?? isTriggering}
+      className="cursor-pointer"
     >
-      <LifeBuoyIcon className="h-4 w-4" />
       {isTriggering ? "Memproses..." : "Trigger Recovery"}
     </Button>
   );

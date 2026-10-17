@@ -1,27 +1,35 @@
-import type { UserRole } from "../types/common.types";
-
 export const USER_ROLES = Object.freeze([
   "admin",
-  "supervisor",
+  "sppg_staff",
   "driver",
+  "facility",
+  "dlh_auditor"
 ] as const);
 
-export const USER_ROLE_SET: ReadonlySet<UserRole> = new Set(USER_ROLES);
+export type UserRole = (typeof USER_ROLES)[number];
 
 export const ROLE_LABELS: Readonly<Record<UserRole, string>> = Object.freeze({
-  admin: "Administrator",
-  supervisor: "Supervisor",
-  driver: "Driver",
+  admin: "Admin",
+  sppg_staff: "Staf SPPG",
+  driver: "Pengemudi",
+  facility: "Operator Fasilitas",
+  dlh_auditor: "Auditor DLH"
 });
 
-export const ROLE_HIERARCHY: Readonly<Record<UserRole, number>> = Object.freeze(
-  {
-    admin: 3,
-    supervisor: 2,
-    driver: 1,
-  },
-);
+export const CONSOLE_ROLES: readonly UserRole[] = Object.freeze([
+  "admin",
+  "dlh_auditor",
+  "sppg_staff"
+] as const);
 
-export function isValidRole(role: string): role is UserRole {
-  return USER_ROLE_SET.has(role as UserRole);
+export const FIELD_ROLES: readonly UserRole[] = Object.freeze([
+  "sppg_staff",
+  "driver",
+  "facility"
+] as const);
+
+const USER_ROLE_SET: ReadonlySet<string> = new Set(USER_ROLES);
+
+export function isUserRole(value: unknown): value is UserRole {
+  return typeof value === "string" && USER_ROLE_SET.has(value);
 }

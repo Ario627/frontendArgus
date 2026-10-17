@@ -5,7 +5,7 @@ import { cn } from "../../../lib/cn";
 import L from "leaflet";
 import { Skeleton } from "../../../shared/components/ui/skeleton";
 import { EmptyState } from "../../../shared/components/feedback/empty-state";
-import type { RouteResult } from "../../../shared/types/optimization.types";
+import type { RouteResult, RouteStop } from "../../../shared/types/optimization.types";
 import "leaflet/dist/leaflet.css";
 
 interface RouteResultMapProps {
@@ -30,33 +30,24 @@ const ROUTE_COLORS = Object.freeze([
 
 interface ParsedStop {
   readonly destId: string;
+  readonly destName?: string;
   readonly lat: number;
   readonly lng: number;
   readonly order: number;
 }
 
-function parseStopCoordinates(destId: string): { lat: number; lng: number } | null {
-  const match = destId.match(/^(-?\d+\.?\d*)@(-?\d+\.?\d*)$/);
-  if (!match) return null;
-  const lat = parseFloat(match[1]);
-  const lng = parseFloat(match[2]);
-  if (Number.isNaN(lat) || Number.isNaN(lng)) return null;
-  return { lat, lng };
-}
-
 function buildRouteStops(route: RouteResult): readonly ParsedStop[] {
   return route.stops
-    .map((stop) => {
-      const coords = parseStopCoordinates(stop.destId);
-      if (!coords) return null;
-      return {
-        destId: stop.destId,
-        lat: coords.lat,
-        lng: coords.lng,
-        order: stop.order,
-      };
-    })
-    .filter((s): s is ParsedStop => s !== null)
+    .filter((stop): stop is RouteStop & { destLat: number; destLng: number } =>
+      stop.destLat !== undefined && stop.destLng !== undefined,
+    )
+    .map((stop) => ({
+      destId: stop.destId,
+      destName: stop.destName,
+      lat: stop.destLat,
+      lng: stop.destLng,
+      order: stop.order,
+    }))
     .sort((a, b) => a.order - b.order);
 }
 
@@ -77,7 +68,7 @@ export function RouteResultMap({ routes, isLoading, className }: RouteResultMapP
     return (
       <div
         className={cn(
-          "relative h-100 w-full overflow-hidden  border border-border",
+          "relative h-100 w-full overflow-hidden border border-border",
           className,
         )}
       >
@@ -106,7 +97,7 @@ export function RouteResultMap({ routes, isLoading, className }: RouteResultMapP
   return (
     <div
       className={cn(
-        "relative h-100 w-full overflow-hidden  border border-border",
+        "relative h-100 w-full overflow-hidden border border-border",
         className,
       )}
     >
@@ -141,8 +132,8 @@ export function RouteResultMap({ routes, isLoading, className }: RouteResultMapP
             >
               <Tooltip direction="top" opacity={0.9}>
                 <div className="text-xs">
-                  <div className="font-semibold">{segment.routeId}</div>
-                  <div>Stop #{stop.order}: {stop.destId}</div>
+                  <div className="font-semibold">{stop.destName ?? stop.destId}</div>
+                  <div>Stop #{stop.order}</div>
                 </div>
               </Tooltip>
             </CircleMarker>

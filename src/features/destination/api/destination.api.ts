@@ -1,7 +1,7 @@
 import { apiClient } from "../../../api/axios-client";
 import { API_ENDPOINTS } from "../../../api/endpoints";
 import type { PaginatedResponse } from "../../../shared/types/common.types";
-import type { Destination } from "../../../shared/types/destination.types";
+import type { Destination, DestinationMapItem } from "../../../shared/types/destination.types";
 import type { CreateDestinationFormValues } from "../schemas/create-destination.schema";
 import type { UpdateDestinationFormValues } from "../schemas/update-destination.schema";
 
@@ -24,6 +24,13 @@ export const destinationApi = Object.freeze({
   detail: async (id: string): Promise<Destination> => {
     const response = await apiClient.get<Destination>(
       API_ENDPOINTS.destination.detail(id),
+    );
+    return response.data;
+  },
+
+  map: async (): Promise<DestinationMapItem[]> => {
+    const response = await apiClient.get<DestinationMapItem[]>(
+      API_ENDPOINTS.destination.map,
     );
     return response.data;
   },

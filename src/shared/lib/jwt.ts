@@ -1,51 +1,44 @@
-import type { AuthenticatedUser, UserRole } from "../types/common.types";
+const TOKEN_EXPIRY_SKEW_MS = 30_000;
 
-interface JwtPayload {
-  readonly sub: string;
-  readonly username: string;
-  readonly role: UserRole;
-  readonly fleetId: string | null;
-  readonly exp?: number;
-  readonly iat?: number;
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-export function decodeJwt(token: string): JwtPayload {
-  const parts = token.split(".");
-  if (parts.length !== 3) {
-    throw new Error("Invalid JWT format");
-  }
-  const payloadB64Url = parts[1]!;
-  const payloadB64 = payloadB64Url.replace(/-/g, "+").replace(/_/g, "/");
-  const padded = payloadB64.padEnd(
-    payloadB64.length + ((4 - (payloadB64.length % 4)) % 4),
-    "=",
-  );
-  const decoded = atob(padded);
-  const utf8 = decodeURIComponent(
-    Array.from(decoded)
-      .map((c) => `%${c.charCodeAt(0).toString(16).padStart(2, "0")}`)
-      .join(""),
-  );
-  return JSON.parse(utf8) as JwtPayload;
-}
-
-export function tokenToUser(token: string): AuthenticatedUser {
-  const payload = decodeJwt(token);
-  return {
-    id: payload.sub,
-    username: payload.username,
-    role: payload.role,
-    fleetId: payload.fleetId,
-  };
-}
-
-export function isTokenExpired(token: string | null): boolean {
-  if (!token) return true;
+function decodeBase64UrlSegment(segment: string): string | null {
   try {
-    const payload = decodeJwt(token);
-    if (typeof payload.exp !== "number") return false;
-    return Date.now() >= payload.exp * 1000;
+    const base64 = segment.replace(/[-_]/g, (char) => (char === "-" ? "+" : "/"));
+    const padded = base64.padEnd(Math.ceil(base64.length / 4) * 4, "=");
+    const binary = atob(padded);
+    const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+    return new TextDecoder().decode(bytes);
   } catch {
-    return true;
+    return null;
   }
+}
+
+export function decodeJwtClaims(token: string): Record<string, unknown> | null {
+  const segments = token.split(".");
+  if (segments.length !== 3) return null;
+  const payload = segments[1];
+  if (payload === undefined || payload.length === 0) return null;
+  const json = decodeBase64UrlSegment(payload);
+  if (json === null) return null;
+  try {
+    const parsed: unknown = JSON.parse(json);
+    return isRecord(parsed) ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+export function getTokenExpiresAtMs(token: string): number | null {
+  const claims = decodeJwtClaims(token);
+  const exp = claims?.["exp"];
+  return typeof exp === "number" && Number.isFinite(exp) ? exp * 1000 : null;
+}
+
+export function isTokenExpired(token: string, skewMs: number = TOKEN_EXPIRY_SKEW_MS): boolean {
+  const expiresAtMs = getTokenExpiresAtMs(token);
+  if (expiresAtMs === null) return false;
+  return expiresAtMs <= Date.now() + skewMs;
 }

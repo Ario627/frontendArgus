@@ -10,7 +10,8 @@ export const API_ENDPOINTS = Object.freeze({
     update: (id: string) => `/fleet/${id}` as const,
     remove: (id: string) => `/fleet/${id}` as const,
     revokeDevice: (id: string) => `/fleet/${id}/revoke-device` as const,
-    assignDevice: (fleetId: string) => `/device/fleet/${fleetId}/assign` as const,
+    assignDevice: (fleetId: string) =>
+      `/device/fleet/${fleetId}/assign` as const,
     exportCsv: "/fleet/export/csv",
   },
   destination: {
@@ -19,6 +20,7 @@ export const API_ENDPOINTS = Object.freeze({
     create: "/destination",
     update: (id: string) => `/destination/${id}` as const,
     remove: (id: string) => `/destination/${id}` as const,
+    map: "/destination/map",
   },
   dashboard: {
     summary: "/dashboard/summary",
@@ -31,6 +33,7 @@ export const API_ENDPOINTS = Object.freeze({
     trigger: "/recovery/trigger",
     assign: "/recovery/assign",
     result: (id: string) => `/recovery/${id}` as const,
+    suggest: (id: string) => `/recovery/${id}/suggest` as const,
   },
   health: "/health",
 } as const);

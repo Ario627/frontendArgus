@@ -113,9 +113,9 @@ function RecoveryResultCardInner({
               size="sm"
               variant="outline"
               onClick={onAssignManual}
-              className="w-full"
+              className="w-full cursor-pointer"
             >
-              <LifeBuoyIcon className="h-4 w-4" />
+              
               Assign Manual
             </Button>
           )}

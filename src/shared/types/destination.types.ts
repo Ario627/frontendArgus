@@ -12,3 +12,13 @@ export interface Destination {
   readonly createdAt: string;
   readonly updatedAt: string;
 }
+
+export interface DestinationMapItem {
+  readonly id: string;
+  readonly name: string;
+  readonly type: DestinationType;
+  readonly latitude: number;
+  readonly longitude: number;
+  readonly priority: number;
+  readonly capacityKg: number;
+}

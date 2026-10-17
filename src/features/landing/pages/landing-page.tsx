@@ -108,7 +108,6 @@ function RouteAnimation() {
         </linearGradient>
       </defs>
 
-      {/* Route path */}
       <path
         d="M 40 140 Q 120 60 200 100 T 360 80"
         fill="none"
@@ -118,7 +117,6 @@ function RouteAnimation() {
         style={{ animation: "route-dash 1.5s linear infinite" }}
       />
 
-      {/* Stops */}
       {[
         { x: 40, y: 140 },
         { x: 120, y: 70 },
@@ -148,7 +146,6 @@ function RouteAnimation() {
         </g>
       ))}
 
-      {/* Moving truck dot */}
       <circle r="5" fill="hsl(var(--brand-foreground))" stroke="hsl(var(--brand))" strokeWidth="2">
         <animateMotion
           dur="4s"
@@ -203,11 +200,9 @@ export function LandingPage() {
       </header>
 
       <main>
-        {/* Hero */}
         <section className="relative overflow-hidden">
           <div className="absolute inset-0 bg-linear-to-b from-brand-soft via-background to-background" />
 
-          {/* Animated decorative blobs */}
           <div
             className="absolute left-[10%] top-10 h-72 w-72 inline-flex border border-brand bg-brand/10  animate-drift"
             aria-hidden
@@ -259,7 +254,6 @@ export function LandingPage() {
                 </div>
               </div>
 
-              {/* Route visualization card */}
               <div
                 className="animate-slide-in-left relative hidden lg:block"
                 style={{ animationDelay: "0.4s" }}
@@ -307,7 +301,6 @@ export function LandingPage() {
           </div>
         </section>
 
-        {/* Features */}
         <section id="fitur" className="mx-auto max-w-7xl px-6 py-20">
           <div className="mb-14 text-center">
             <h2 className="mb-3 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
@@ -339,7 +332,6 @@ export function LandingPage() {
           </div>
         </section>
 
-        {/* How it works */}
         <section
           id="cara-kerja"
           className="border-y border-border bg-muted/30"
@@ -381,7 +373,6 @@ export function LandingPage() {
           </div>
         </section>
 
-        {/* Metrics */}
         <section id="metrik" className="mx-auto max-w-7xl px-6 py-20">
           <div className="mb-14 text-center">
             <h2 className="mb-3 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
@@ -410,7 +401,6 @@ export function LandingPage() {
           </div>
         </section>
 
-        {/* Tech stack */}
         <section
           id="teknologi"
           className="mx-auto max-w-7xl px-6 pb-20"
@@ -450,7 +440,6 @@ export function LandingPage() {
           </div>
         </section>
 
-        {/* CTA */}
         <section className="mx-auto max-w-7xl px-6 pb-24">
           <div className="relative overflow-hidden  bg-brand px-8 py-14 text-center sm:px-16 sm:py-18">
             <div
@@ -485,7 +474,6 @@ export function LandingPage() {
         </section>
       </main>
 
-      {/* Footer */}
       <footer className="border-t border-border">
         <div className="mx-auto max-w-7xl px-6 py-10">
           <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">

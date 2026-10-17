@@ -49,6 +49,9 @@ export interface OptimizationInput {
 
 export interface RouteStop {
   readonly destId: string;
+  readonly destName?: string;
+  readonly destLat?: number;
+  readonly destLng?: number;
   readonly order: number;
   readonly etaEpoch: number;
   readonly cumulativeKm: number;
@@ -63,6 +66,7 @@ export interface RouteResult {
 
 export interface SkippedDestination {
   readonly destId: string;
+  readonly destName?: string;
   readonly reason: string;
 }
 

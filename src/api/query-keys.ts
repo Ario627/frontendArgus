@@ -16,6 +16,7 @@ export const queryKeys = {
     all: ["destination"] as const,
     list: () => ["destination", "list"] as const,
     detail: (id: string) => ["destination", "detail", id] as const,
+    map: ["destination", "map"] as const,
   },
   dashboard: {
     summary: ["dashboard", "summary"] as const,

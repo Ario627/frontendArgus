@@ -31,9 +31,7 @@ function LazyRouteError() {
         <h2 className="mb-2 text-lg font-semibold text-foreground">
           {status} — {message}
         </h2>
-        <p className="text-sm text-muted-foreground">
-          Pastikan modul halaman sudah diimplementasikan.
-        </p>
+        
       </div>
     </div>
   );

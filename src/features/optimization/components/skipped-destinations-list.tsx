@@ -9,8 +9,7 @@ interface SkippedDestinationsListProps {
 
 const REASON_LABELS: Readonly<Record<string, string>> = Object.freeze({
   low_volume: "Volume rendah",
-  capacity_exceeded: "Kapasitas tidak cukup",
-  time_window: "Di luar jendela waktu",
+  capacity_or_time: "Kapasitas armada penuh",
 });
 
 function getReasonLabel(reason: string): string {
@@ -23,10 +22,10 @@ function SkippedDestinationsListInner({
   const columns = useMemo<Column<SkippedDestination>[]>(
     () => [
       {
-        key: "destId",
+        key: "destName",
         header: "Destinasi",
         accessor: (row) => (
-          <span className="font-medium">{row.destId}</span>
+          <span className="font-medium">{row.destName ?? row.destId}</span>
         ),
         width: "200px",
       },
