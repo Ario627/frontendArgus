@@ -75,7 +75,8 @@ export const endpoints = Object.freeze({
   }),
   anomalies: Object.freeze({
     list: "/anomalies",
-    close: (id: string) => `/anomalies/${id}/close`
+    close: (id: string) => `/anomalies/${id}/close`,
+    digitScan: "/anomalies/digit-scan"
   }),
   export: Object.freeze({
     batchesCsv: "/export/batches.csv",

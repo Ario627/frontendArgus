@@ -2,6 +2,8 @@ import { useState } from "react";
 import { isApiError } from "@/api/api-error";
 import { useBatchDetail } from "@/features/batch/hooks/use-batch-detail";
 import { useConfirmTransfer } from "@/features/ledger/hooks/use-confirm-transfer";
+import { PhotoCaptureField } from "@/features/photo/components/photo-capture-field";
+import { uploadPhoto } from "@/features/photo/api/photo.api";
 import { Button } from "@/shared/components/ui/button";
 import { Field } from "@/shared/components/ui/field";
 import { Input } from "@/shared/components/ui/input";
@@ -11,6 +13,7 @@ import { useToastStore } from "@/shared/components/ui/toast-store";
 import { newClientEventId } from "@/shared/lib/id";
 import { nowIso } from "@/shared/lib/format";
 import type { TransferEvaluation } from "@/shared/types/ledger.types";
+import type { CompressedPhoto } from "@/features/photo/photo-compress";
 import type { LatLng } from "@/shared/types/maps.types";
 
 const TRANSFER_NOTE_LABELS: Readonly<Record<string, string>> = Object.freeze({
@@ -42,6 +45,8 @@ export function TransferConfirmSheet({
   const [error, setError] = useState<string | null>(null);
   const [transfer, setTransfer] = useState<TransferEvaluation | null>(null);
   const [prefilledFor, setPrefilledFor] = useState<string | null>(null);
+  const [photo, setPhoto] = useState<CompressedPhoto | null>(null);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
 
   if (batchId !== null && batch.data !== undefined && prefilledFor !== batchId) {
     setPrefilledFor(batchId);
@@ -49,6 +54,7 @@ export function TransferConfirmSheet({
     setNote("");
     setError(null);
     setTransfer(null);
+    setPhoto(null);
   }
 
   const submit = () => {
@@ -58,32 +64,50 @@ export function TransferConfirmSheet({
       setError("Berat harus angka 0,1 sampai 500 kg.");
       return;
     }
-    mutation.mutate(
-      {
-        batchId,
-        input: {
-          clientEventId: newClientEventId(),
-          weightKg: parsed,
-          occurredAt: nowIso(),
-          ...(position === null ? {} : { lat: position.lat, lng: position.lng }),
-          ...(note.trim().length === 0 ? {} : { note: note.trim() })
-        }
-      },
-      {
-        onSuccess: (result) => {
-          setTransfer(result.transfer);
-          showToast({
-            message:
-              result.transfer.status === "SAH"
-                ? "Serah terima sah — dua saksi cocok."
-                : "Serah terima tercatat, menunggu saksi pihak lain."
-          });
+
+    const proceed = (photoHash: string | null) => {
+      mutation.mutate(
+        {
+          batchId,
+          input: {
+            clientEventId: newClientEventId(),
+            weightKg: parsed,
+            occurredAt: nowIso(),
+            ...(position === null ? {} : { lat: position.lat, lng: position.lng }),
+            ...(note.trim().length === 0 ? {} : { note: note.trim() }),
+            ...(photoHash === null ? {} : { photoHash })
+          }
         },
-        onError: (cause) => {
-          setError(isApiError(cause) ? cause.message : "Serah terima tidak dapat dicatat.");
+        {
+          onSuccess: (result) => {
+            setTransfer(result.transfer);
+            showToast({
+              message:
+                result.transfer.status === "SAH"
+                  ? "Serah terima sah — dua saksi cocok."
+                  : "Serah terima tercatat, menunggu saksi pihak lain."
+            });
+          },
+          onError: (cause) => {
+            setError(isApiError(cause) ? cause.message : "Serah terima tidak dapat dicatat.");
+          }
         }
-      }
-    );
+      );
+    };
+
+    if (photo === null) {
+      proceed(null);
+      return;
+    }
+    setUploadingPhoto(true);
+    void uploadPhoto({ blob: photo.blob, sha256: photo.sha256, refType: "batch", refId: batchId })
+      .then((uploaded) => proceed(uploaded.sha256))
+      .catch(() => {
+        setError("Foto gagal diunggah. Periksa sinyal, atau hapus foto lalu catat.");
+      })
+      .finally(() => {
+        setUploadingPhoto(false);
+      });
   };
 
   const close = () => {
@@ -102,7 +126,7 @@ export function TransferConfirmSheet({
       description={roleNote}
       footer={
         transfer === null ? (
-          <Button fullWidth loading={mutation.isPending} onClick={submit}>
+          <Button fullWidth loading={mutation.isPending || uploadingPhoto} onClick={submit}>
             Catat serah terima
           </Button>
         ) : (
@@ -159,6 +183,13 @@ export function TransferConfirmSheet({
               />
             )}
           </Field>
+
+          <PhotoCaptureField
+            label="Foto saat serah terima (opsional)"
+            hint="Membantu menyelesaikan selisih berat saat audit."
+            disabled={uploadingPhoto}
+            onPhotoChange={setPhoto}
+          />
 
           <p className="text-xs text-ink-lemah">
             {position === null

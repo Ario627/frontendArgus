@@ -36,6 +36,7 @@ export interface CreateBatchResult {
 }
 
 export interface CreateBatchInput {
+  readonly id?: string;
   readonly clientEventId: string;
   readonly sppgId: string;
   readonly aliran: WasteFlow;

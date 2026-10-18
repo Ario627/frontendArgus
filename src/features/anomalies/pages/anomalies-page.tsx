@@ -1,8 +1,10 @@
 import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router";
 import { isApiError } from "@/api/api-error";
+import { useAuthStore } from "@/features/auth/store/auth.store";
 import { AnomalyDetailSheet } from "@/features/anomalies/components/anomaly-detail-sheet";
 import { AnomalyTable } from "@/features/anomalies/components/anomaly-table";
+import { DigitScanSheet } from "@/features/anomalies/components/digit-scan-sheet";
 import { useAnomalies, type AnomalyFilterState } from "@/features/anomalies/hooks/use-anomalies";
 import { Button } from "@/shared/components/ui/button";
 import { Select } from "@/shared/components/ui/select";
@@ -35,6 +37,7 @@ function readFilters(params: URLSearchParams): AnomalyFilterState {
 }
 
 export function AnomaliesPage() {
+  const role = useAuthStore((state) => state.role);
   const [searchParams, setSearchParams] = useSearchParams();
   const filters = useMemo(() => readFilters(searchParams), [searchParams]);
   const query = useAnomalies(filters);
@@ -42,6 +45,8 @@ export function AnomaliesPage() {
   const apiError = isApiError(query.error) ? query.error : null;
 
   const [selected, setSelected] = useState<AnomalyDto | null>(null);
+  const [scanOpen, setScanOpen] = useState(false);
+  const canScan = role === "admin" || role === "dlh_auditor";
 
   const anomalies = query.data?.pages.flatMap((page) => page.items) ?? [];
   const total = query.data?.pages[0]?.total ?? 0;
@@ -63,6 +68,13 @@ export function AnomaliesPage() {
           query.data === undefined
             ? "Temuan verifikasi rantai dan neraca massa."
             : `${formatInt(total)} anomali ${filters.terbuka ? "terbuka" : "tercatat"}.`
+        }
+        actions={
+          canScan ? (
+            <Button variant="secondary" size="sm" onClick={() => setScanOpen(true)}>
+              Pindai digit
+            </Button>
+          ) : undefined
         }
       />
 
@@ -159,6 +171,8 @@ export function AnomaliesPage() {
           if (!open) setSelected(null);
         }}
       />
+
+      <DigitScanSheet open={scanOpen} onOpenChange={setScanOpen} />
     </div>
   );
 }

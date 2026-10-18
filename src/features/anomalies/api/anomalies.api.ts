@@ -4,6 +4,7 @@ import { toSearchParams } from "@/shared/lib/search-params";
 import type { PaginatedItems } from "@/shared/types/api.types";
 import type { AnomalyKind, AnomalySeverity } from "@/shared/constants/anomaly.constant";
 import type { CloseAnomalyResult, AnomalyDto } from "@/shared/types/anomaly.types";
+import type { DigitScanInput, DigitScanResult } from "@/shared/types/digit.types";
 
 export interface AnomalyQuery {
   readonly jenis?: AnomalyKind;
@@ -22,4 +23,8 @@ export function fetchAnomalies(query: AnomalyQuery): Promise<PaginatedItems<Anom
 
 export function closeAnomaly(anomalyId: string, catatan: string): Promise<CloseAnomalyResult> {
   return apiPost<CloseAnomalyResult>(endpoints.anomalies.close(anomalyId), { catatan });
+}
+
+export function runDigitScan(input: DigitScanInput): Promise<DigitScanResult> {
+  return apiPost<DigitScanResult>(endpoints.anomalies.digitScan, input);
 }

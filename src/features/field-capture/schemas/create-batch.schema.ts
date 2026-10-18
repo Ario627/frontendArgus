@@ -92,6 +92,8 @@ export const captureSchema: z.ZodType<CaptureFormValues> = z
 export interface CapturePayloadContext {
   readonly sppgId: string;
   readonly clientEventId: string;
+  readonly batchId?: string;
+  readonly photoHash?: string;
 }
 
 export function toCreateBatchPayload(
@@ -109,6 +111,7 @@ export function toCreateBatchPayload(
     fractions = built.ok ? { ...built.fractions } : {};
   }
   return {
+    ...(context.batchId === undefined ? {} : { id: context.batchId }),
     clientEventId: context.clientEventId,
     sppgId: context.sppgId,
     aliran: values.aliran,
@@ -116,6 +119,7 @@ export function toCreateBatchPayload(
     occurredAt: new Date(values.occurredAt).toISOString(),
     visibleOil: values.visibleOil,
     ...(fractions === null ? {} : { fractions }),
-    ...(moisture === null ? {} : { moistureProxy: moisture })
+    ...(moisture === null ? {} : { moistureProxy: moisture }),
+    ...(context.photoHash === undefined ? {} : { photoHash: context.photoHash })
   };
 }

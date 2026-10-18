@@ -12,6 +12,7 @@ import { useLedgerEvents } from "@/features/ledger/hooks/use-ledger-events";
 import { useBatchVerification } from "@/features/ledger/hooks/use-batch-verification";
 import { LedgerEventList } from "@/features/ledger/components/ledger-event-list";
 import { LedgerVerifyPanel } from "@/features/ledger/components/ledger-verify-panel";
+import { PhotoBukti } from "@/features/photo/components/photo-bukti";
 import { KgValue } from "@/shared/components/data/kg-value";
 import { HashTag } from "@/shared/components/data/hash-tag";
 import { FractionBar } from "@/shared/components/data/fraction-bar";
@@ -158,6 +159,13 @@ export function BatchDetailPage() {
           <FractionBar values={batch.fractions} />
         </section>
       ) : null}
+
+      {batch.photoHash === null ? null : (
+        <section className="flex flex-col gap-2">
+          <h2 className="text-sm font-medium text-ink">Foto bukti</h2>
+          <PhotoBukti sha256={batch.photoHash} />
+        </section>
+      )}
 
       <section className="flex flex-col">
         <h2 className="pb-2 text-sm font-medium text-ink">Catatan batch</h2>

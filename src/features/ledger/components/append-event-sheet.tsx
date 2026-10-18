@@ -12,10 +12,13 @@ import {
   type UiAppendType
 } from "@/features/ledger/ledger-append";
 import { useAppendLedgerEvent } from "@/features/ledger/hooks/use-append-ledger-event";
+import { PhotoCaptureField } from "@/features/photo/components/photo-capture-field";
+import { uploadPhoto } from "@/features/photo/api/photo.api";
 import { TRANSFER_SIDES, type TransferSide } from "@/shared/constants/ledger.constant";
 import type { UserRole } from "@/shared/constants/roles.constant";
 import type { BatchStatus } from "@/shared/constants/batch.constant";
 import { formatKgValue, parseKg } from "@/shared/lib/format";
+import type { CompressedPhoto } from "@/features/photo/photo-compress";
 import {
   OCCURRED_AT_MODE_LABELS,
   OCCURRED_AT_MODES,
@@ -54,6 +57,8 @@ export function AppendEventSheet({
   const [note, setNote] = useState("");
   const [sisi, setSisi] = useState<TransferSide | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [photo, setPhoto] = useState<CompressedPhoto | null>(null);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [wasOpen, setWasOpen] = useState(open);
 
   if (open !== wasOpen) {
@@ -66,6 +71,7 @@ export function AppendEventSheet({
       setNote("");
       setSisi(null);
       setError(null);
+      setPhoto(null);
     }
   }
 
@@ -93,32 +99,50 @@ const submit = () => {
       setError("Pilih sisi serah terima (kirim atau terima).");
       return;
     }
-    append.mutate(
-      {
-        batchId,
-        input: {
-          tipe: spec.tipe,
-          occurredAt: mode === "custom" ? new Date().toISOString() : occurredAtIsoFor(mode),
-          ...(spec.needsWeight && weightKg !== null ? { weightKg } : {}),
-          ...(note.trim() === "" ? {} : { note: note.trim() }),
-          ...(spec.adminSideRequired && sisi !== null ? { sisi } : {})
-        }
-      },
-      {
-        onSuccess: (result) => {
-          showToast({
-            message:
-              result.outcome === "terkirim"
-                ? `${spec.label} tercatat`
-                : `${spec.label} tersimpan — menunggu sinkron`
-          });
-          onOpenChange(false);
+
+    const proceed = (photoHash: string | null) => {
+      append.mutate(
+        {
+          batchId,
+          input: {
+            tipe: spec.tipe,
+            occurredAt: mode === "custom" ? new Date().toISOString() : occurredAtIsoFor(mode),
+            ...(spec.needsWeight && weightKg !== null ? { weightKg } : {}),
+            ...(note.trim() === "" ? {} : { note: note.trim() }),
+            ...(spec.adminSideRequired && sisi !== null ? { sisi } : {}),
+            ...(photoHash === null ? {} : { photoHash })
+          }
         },
-        onError: () => {
-          setError("Tidak dapat menyimpan di perangkat. Coba lagi.");
+        {
+          onSuccess: (result) => {
+            showToast({
+              message:
+                result.outcome === "terkirim"
+                  ? `${spec.label} tercatat`
+                  : `${spec.label} tersimpan — menunggu sinkron`
+            });
+            onOpenChange(false);
+          },
+          onError: () => {
+            setError("Tidak dapat menyimpan di perangkat. Coba lagi.");
+          }
         }
-      }
-    );
+      );
+    };
+
+    if (photo === null) {
+      proceed(null);
+      return;
+    }
+    setUploadingPhoto(true);
+    void uploadPhoto({ blob: photo.blob, sha256: photo.sha256, refType: "batch", refId: batchId })
+      .then((uploaded) => proceed(uploaded.sha256))
+      .catch(() => {
+        setError("Foto gagal diunggah. Periksa sinyal, atau hapus foto lalu simpan.");
+      })
+      .finally(() => {
+        setUploadingPhoto(false);
+      });
   };
 
   return (
@@ -128,7 +152,7 @@ const submit = () => {
       title="Catat peristiwa"
       description="Peristiwa masuk antrean sinkron dan tidak bisa diubah setelah tercatat."
       footer={
-        <Button size="lg" fullWidth loading={append.isPending} onClick={submit}>
+        <Button size="lg" fullWidth loading={append.isPending || uploadingPhoto} onClick={submit}>
           {spec.verb}
         </Button>
       }
@@ -217,6 +241,13 @@ const submit = () => {
             />
           )}
         </Field>
+
+        <PhotoCaptureField
+          label="Foto bukti (opsional)"
+          hint="Lampiran visual untuk peristiwa ini. Dikompres di perangkat sebelum dikirim."
+          disabled={uploadingPhoto}
+          onPhotoChange={setPhoto}
+        />
 
         {error === null ? null : (
           <p role="alert" className="text-sm text-bata">

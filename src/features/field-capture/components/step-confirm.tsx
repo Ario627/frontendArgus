@@ -104,7 +104,7 @@ export function StepConfirm({ form }: StepConfirmProps) {
       </div>
 
       <p className="text-xs text-ink-lemah">
-        Foto opsional menyusul di pembaruan berikutnya. Hindari wajah orang di foto.
+        Periksa sekali lagi sebelum disimpan — catatan buku besar tidak bisa diubah setelah tercatat.
       </p>
     </div>
   );

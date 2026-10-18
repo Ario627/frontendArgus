@@ -107,8 +107,9 @@ export function MenuPage() {
       {insights.data === undefined || showSkeleton ? null : <InsightList report={insights.data} />}
 
       <ServingPanel
-        scopeSppgId={role === "sppg_staff" ? sppgId : null}
-        canAdd={role === "sppg_staff" && sppgId !== null}
+        sppgId={sppgId}
+        canAdd={role === "sppg_staff" ? sppgId !== null : role === "admin"}
+        canChooseSppg={role === "admin"}
       />
 
       <ObservationSheet

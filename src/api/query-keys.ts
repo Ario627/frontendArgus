@@ -175,6 +175,9 @@ export const qk = Object.freeze({
     list: (filters?: AuditListFilters) => ["audit", "list", filters ?? null] as const
   }),
   parameters: ["parameters"] as const,
+  photos: Object.freeze({
+    link: (sha256: string) => ["photos", sha256] as const
+  }),
   maps: Object.freeze({
     directions: (from: string, to: string) => ["maps", "directions", from, to] as const
   }),
