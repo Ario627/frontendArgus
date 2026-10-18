@@ -5,7 +5,7 @@ import {
   readCaptureDraft,
   writeCaptureDraft,
   type CaptureDraftRecord
-} from "@/shared/lib/idb";
+} from "@/shared/lib/outbox-db";
 import type { CaptureFormValues } from "@/features/field-capture/schemas/create-batch.schema";
 
 const DRAFT_DEBOUNCE_MS = 800;

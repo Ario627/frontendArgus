@@ -12,6 +12,17 @@ export const LEDGER_EVENT_TYPES = Object.freeze([
 
 export type LedgerEventType = (typeof LEDGER_EVENT_TYPES)[number];
 
+export const APPENDABLE_LEDGER_EVENT_TYPES = Object.freeze([
+  "DITIMBANG",
+  "SERAH_TERIMA",
+  "DITERIMA",
+  "DIOLAH",
+  "KELUARAN",
+  "KOREKSI"
+] as const);
+
+export type AppendableLedgerEventType = (typeof APPENDABLE_LEDGER_EVENT_TYPES)[number];
+
 export const LEDGER_EVENT_LABELS: Readonly<Record<LedgerEventType, string>> = Object.freeze({
   DIKELUARKAN: "Dikeluarkan",
   DITIMBANG: "Ditimbang",

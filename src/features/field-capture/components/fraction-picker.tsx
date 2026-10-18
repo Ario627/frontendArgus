@@ -5,8 +5,7 @@ import { cn } from "@/shared/lib/cn";
 import {
   FRACTION_CODES,
   FRACTION_LABELS,
-  type FractionCode,
-  type FractionValues
+  type FractionCode
 } from "@/shared/constants/fraction.constant";
 import { fractionsFromQuick, parsePercent } from "@/shared/lib/fraction-input";
 import { formatNumber } from "@/shared/lib/format";

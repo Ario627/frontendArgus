@@ -3,48 +3,22 @@ import { useWatch, type UseFormReturn } from "react-hook-form";
 import { ChipButton } from "@/shared/components/ui/chip";
 import { Input } from "@/shared/components/ui/input";
 import { cn } from "@/shared/lib/cn";
-import { FRACTION_CODES, FRACTION_LABELS } from "@/shared/constants/fraction.constant";
+import { FRACTION_CODES } from "@/shared/constants/fraction.constant";
 import { FLOW_LABELS, MOISTURE_LABELS, type MoistureProxy } from "@/shared/constants/flow.constant";
 import { buildFractionsFromForm } from "@/shared/lib/fraction-input";
 import { formatKg, formatNumber, parseKg } from "@/shared/lib/format";
+import {
+  OCCURRED_AT_MODE_LABELS,
+  occurredAtIsoFor,
+  inferOccurredAtMode,
+  isoToLocalInputValue,
+  OCCURRED_AT_MODES,
+  type OccurredAtMode
+} from "@/shared/lib/occurred-at";
 import type { CaptureFormValues } from "@/features/field-capture/schemas/create-batch.schema";
 
 export interface StepConfirmProps {
   readonly form: UseFormReturn<CaptureFormValues>;
-}
-
-type OccurredAtMode = "now" | "min30" | "hour1" | "custom";
-
-const MODE_OFFSETS_MS: Readonly<Record<Exclude<OccurredAtMode, "custom">, number>> = Object.freeze({
-  now: 0,
-  min30: 30 * 60 * 1000,
-  hour1: 60 * 60 * 1000
-});
-
-const MODE_LABELS: Readonly<Record<OccurredAtMode, string>> = Object.freeze({
-  now: "Baru saja",
-  min30: "±30 mnt",
-  hour1: "±1 jam",
-  custom: "Lainnya"
-});
-
-const MODE_TOLERANCE_MS = 90 * 1000;
-
-function inferMode(iso: string): OccurredAtMode {
-  const time = Date.parse(iso);
-  if (Number.isNaN(time)) return "custom";
-  const age = Date.now() - time;
-  if (Math.abs(age) <= MODE_TOLERANCE_MS) return "now";
-  if (Math.abs(age - MODE_OFFSETS_MS.min30) <= MODE_TOLERANCE_MS) return "min30";
-  if (Math.abs(age - MODE_OFFSETS_MS.hour1) <= MODE_TOLERANCE_MS) return "hour1";
-  return "custom";
-}
-
-function isoToLocalInput(iso: string): string {
-  const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return "";
-  const pad = (value: number) => String(value).padStart(2, "0");
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
 function SummaryRow({ label, value }: { readonly label: string; readonly value: string }) {
@@ -59,7 +33,7 @@ function SummaryRow({ label, value }: { readonly label: string; readonly value: 
 export function StepConfirm({ form }: StepConfirmProps) {
   const values = useWatch({ control: form.control });
   const occurredAt = values.occurredAt ?? "";
-  const [mode, setMode] = useState<OccurredAtMode>(() => inferMode(occurredAt));
+  const [mode, setMode] = useState<OccurredAtMode>(() => inferOccurredAtMode(occurredAt));
 
   const weight = parseKg(values.weightText ?? "");
   const fractions = values.aliran === "organik" ? buildFractionsFromForm({
@@ -87,7 +61,7 @@ export function StepConfirm({ form }: StepConfirmProps) {
   const pickMode = (next: OccurredAtMode) => {
     setMode(next);
     if (next === "custom") return;
-    setOccurredIso(new Date(Date.now() - MODE_OFFSETS_MS[next]).toISOString());
+    setOccurredIso(occurredAtIsoFor(next));
   };
 
   const occurredError = form.formState.errors.occurredAt?.message;
@@ -108,9 +82,9 @@ export function StepConfirm({ form }: StepConfirmProps) {
       <div role="group" aria-label="Waktu kejadian" className="flex flex-col gap-2">
         <p className="text-sm font-medium text-ink">Kapan diambil?</p>
         <div className="flex flex-wrap gap-2">
-          {(Object.keys(MODE_LABELS) as OccurredAtMode[]).map((entry) => (
+          {OCCURRED_AT_MODES.map((entry) => (
             <ChipButton key={entry} selected={mode === entry} onClick={() => pickMode(entry)}>
-              {MODE_LABELS[entry]}
+              {OCCURRED_AT_MODE_LABELS[entry]}
             </ChipButton>
           ))}
         </div>
@@ -118,7 +92,7 @@ export function StepConfirm({ form }: StepConfirmProps) {
           <Input
             type="datetime-local"
             aria-label="Waktu kejadian"
-            value={isoToLocalInput(occurredAt)}
+            value={isoToLocalInputValue(occurredAt)}
             onChange={(event) => {
               if (event.target.value === "") return;
               setOccurredIso(new Date(event.target.value).toISOString());

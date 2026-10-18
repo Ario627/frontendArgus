@@ -4,6 +4,7 @@ import { useDashboardSummary } from "@/features/dashboard/hooks/use-dashboard-su
 import { ErrorState } from "@/shared/components/feedback/error-state";
 import { PageHeader } from "@/shared/components/layout/page-header";
 import { SkeletonList } from "@/shared/components/ui/skeleton";
+import { useDelayedLoading } from "@/shared/hooks/use-delayed-loading";
 import { cn } from "@/shared/lib/cn";
 import { formatDateOnly, formatInt, formatKg } from "@/shared/lib/format";
 
@@ -59,6 +60,7 @@ export function DashboardPage() {
   const summary = useDashboardSummary();
   const data = summary.data;
   const apiError = isApiError(summary.error) ? summary.error : null;
+  const showSkeleton = useDelayedLoading(summary.isLoading);
 
   return (
     <div className="flex max-w-3xl flex-col gap-6">
@@ -70,7 +72,7 @@ export function DashboardPage() {
             : `${formatDateOnly(data.date)} · ${data.scopeSppgId === null ? "Semua dapur" : "Dapur Anda"}`
         }
       />
-      {summary.isLoading ? <SkeletonList rows={8} /> : null}
+      {showSkeleton ? <SkeletonList rows={8} /> : null}
       {summary.isError ? (
         <ErrorState
           description={apiError?.message ?? "Periksa jaringan lalu coba lagi."}

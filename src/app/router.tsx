@@ -8,7 +8,7 @@ import { useAuthStore } from "@/features/auth/store/auth.store";
 import { ConsoleLayout } from "@/shared/components/layout/console-layout";
 import { FieldLayout } from "@/shared/components/layout/field-layout";
 import { homePathForRole } from "@/shared/constants/nav.constant";
-import { CAPTURE_ROLES, CONSOLE_ROLES } from "@/shared/constants/roles.constant";
+import { CAPTURE_ROLES, CONSOLE_ROLES, FIELD_ROLES } from "@/shared/constants/roles.constant";
 
 function HomeRedirect() {
   const role = useAuthStore((state) => state.role);
@@ -42,6 +42,42 @@ export const router = createBrowserRouter([
         ]
       },
       {
+        element: <RequireRole roles={FIELD_ROLES} />,
+        errorElement: <RouteError />,
+        children: [
+          {
+            element: <FieldLayout />,
+            errorElement: <RouteError />,
+            children: [
+              {
+                path: "/antrean",
+                lazy: async () => ({
+                  Component: (await import("@/features/outbox/pages/outbox-page")).OutboxPage
+                })
+              }
+            ]
+          }
+        ]
+      },
+      {
+        element: <RequireRole roles={["facility"]} />,
+        errorElement: <RouteError />,
+        children: [
+          {
+            element: <FieldLayout />,
+            errorElement: <RouteError />,
+            children: [
+              {
+                path: "/fasilitas-masuk",
+                lazy: async () => ({
+                  Component: (await import("@/features/facility/pages/incoming-page")).IncomingPage
+                })
+              }
+            ]
+          }
+        ]
+      },
+      {
         element: <RequireRole roles={CONSOLE_ROLES} />,
         errorElement: <RouteError />,
         children: [
@@ -49,6 +85,24 @@ export const router = createBrowserRouter([
             element: <ConsoleLayout />,
             errorElement: <RouteError />,
             children: [
+              {
+                path: "/batches",
+                lazy: async () => ({
+                  Component: (await import("@/features/batch/pages/batches-page")).BatchesPage
+                })
+              },
+              {
+                path: "/batches/:batchId",
+                lazy: async () => ({
+                  Component: (await import("@/features/batch/pages/batch-detail-page")).BatchDetailPage
+                })
+              },
+              {
+                path: "/dispositions",
+                lazy: async () => ({
+                  Component: (await import("@/features/disposition/pages/dispositions-page")).DispositionsPage
+                })
+              },
               {
                 path: "/dashboard",
                 lazy: async () => ({

@@ -1,25 +1,22 @@
 import { useRef, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type Resolver } from "react-hook-form";
-import { isApiError } from "@/api/api-error";
 import { useAuthStore } from "@/features/auth/store/auth.store";
-import { GateVerdictPanel } from "@/features/field-capture/components/gate-verdict-panel";
 import { StepConfirm } from "@/features/field-capture/components/step-confirm";
 import { StepContent } from "@/features/field-capture/components/step-content";
 import { StepWeight } from "@/features/field-capture/components/step-weight";
+import { SubmissionPanel } from "@/features/field-capture/components/submission-panel";
 import { useCaptureDraft } from "@/features/field-capture/hooks/use-capture-draft";
-import { useCreateBatch } from "@/features/field-capture/hooks/use-create-batch";
-import { useRegateBatch } from "@/features/field-capture/hooks/use-regate-batch";
 import {
   captureSchema,
   toCreateBatchPayload,
   type CaptureFormValues
 } from "@/features/field-capture/schemas/create-batch.schema";
+import { useOutbox } from "@/features/outbox/hooks/use-outbox";
 import { Button } from "@/shared/components/ui/button";
 import { FieldActionBar } from "@/shared/components/layout/field-action-bar";
 import { formatTime } from "@/shared/lib/format";
 import { newClientEventId } from "@/shared/lib/id";
-import type { BatchDetailDto, ReGateInput } from "@/shared/types/batch.types";
 
 type CaptureStep = 1 | 2 | 3;
 
@@ -47,8 +44,7 @@ export function CapturePage() {
   const sppgId = useAuthStore((state) => state.user?.sppgId ?? null);
   const clientEventIdRef = useRef(newClientEventId());
   const [step, setStep] = useState<CaptureStep>(1);
-  const [batch, setBatch] = useState<BatchDetailDto | null>(null);
-  const [duplicate, setDuplicate] = useState(false);
+  const [submissionId, setSubmissionId] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const form = useForm<CaptureFormValues>({
@@ -60,9 +56,7 @@ export function CapturePage() {
   });
 
   const draft = useCaptureDraft(form);
-  const createBatch = useCreateBatch();
-  const regate = useRegateBatch();
-  const pending = createBatch.isPending;
+  const outbox = useOutbox();
 
   const goNext = async () => {
     if (step === 1) {
@@ -88,52 +82,29 @@ export function CapturePage() {
       return;
     }
     setSubmitError(null);
-    const payload = toCreateBatchPayload(values, {
-      sppgId,
-      clientEventId: clientEventIdRef.current
-    });
-    createBatch.mutate(payload, {
-      onSuccess: (result) => {
+    const clientEventId = clientEventIdRef.current;
+    const payload = toCreateBatchPayload(values, { sppgId, clientEventId });
+    void outbox
+      .enqueue({ tipe: "batch", payload: { ...payload } as Record<string, unknown> })
+      .then(() => {
         draft.clear();
-        setBatch(result.batch);
-        setDuplicate(result.duplicate);
-      },
-      onError: (error) => {
-        setSubmitError(
-          isApiError(error) ? error.message : "Tidak dapat menyimpan saat ini. Coba lagi."
-        );
-      }
-    });
+        setSubmissionId(clientEventId);
+      })
+      .catch(() => {
+        setSubmitError("Tidak dapat menyimpan di perangkat. Coba lagi.");
+      });
   });
-
-  const handleRegate = (patch: ReGateInput) => {
-    if (batch === null) return;
-    regate.mutate(
-      { batchId: batch.id, patch },
-      {
-        onSuccess: (updated) => {
-          setBatch(updated);
-        },
-        onError: (error) => {
-          setSubmitError(
-            isApiError(error) ? error.message : "Tidak dapat menilai ulang saat ini. Coba lagi."
-          );
-        }
-      }
-    );
-  };
 
   const startNew = () => {
     clientEventIdRef.current = newClientEventId();
-    setBatch(null);
-    setDuplicate(false);
+    setSubmissionId(null);
     setSubmitError(null);
     setStep(1);
     form.reset(makeDefaults());
     draft.clear();
   };
 
-  if (batch !== null) {
+  if (submissionId !== null) {
     return (
       <div className="flex flex-col gap-4">
         {submitError === null ? null : (
@@ -141,13 +112,7 @@ export function CapturePage() {
             {submitError}
           </p>
         )}
-        <GateVerdictPanel
-          batch={batch}
-          duplicate={duplicate}
-          regatePending={regate.isPending}
-          onRegate={handleRegate}
-          onNew={startNew}
-        />
+        <SubmissionPanel clientEventId={submissionId} onNew={startNew} />
       </div>
     );
   }
@@ -189,7 +154,6 @@ export function CapturePage() {
           {step > 1 ? (
             <Button
               variant="ghost"
-              disabled={pending}
               onClick={() => setStep(step === 3 ? 2 : 1)}
             >
               Kembali
@@ -200,7 +164,7 @@ export function CapturePage() {
               Lanjut: {STEP_LABELS[step === 1 ? 2 : 3]}
             </Button>
           ) : (
-            <Button size="lg" fullWidth loading={pending} onClick={() => void submit()}>
+            <Button size="lg" fullWidth onClick={() => void submit()}>
               Simpan batch
             </Button>
           )}

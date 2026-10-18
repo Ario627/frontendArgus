@@ -1,14 +1,9 @@
-import { apiPost } from "@/api/axios-client";
+import { apiGet, apiPost } from "@/api/axios-client";
 import { endpoints } from "@/api/endpoints";
-import type {
-  BatchDetailDto,
-  CreateBatchInput,
-  CreateBatchResult,
-  ReGateInput
-} from "@/shared/types/batch.types";
+import type { BatchDetailDto, ReGateInput } from "@/shared/types/batch.types";
 
-export function createBatch(input: CreateBatchInput): Promise<CreateBatchResult> {
-  return apiPost<CreateBatchResult>(endpoints.batches.create, input);
+export function fetchBatchDetail(batchId: string): Promise<BatchDetailDto> {
+  return apiGet<BatchDetailDto>(endpoints.batches.detail(batchId));
 }
 
 export function regateBatch(batchId: string, patch: ReGateInput): Promise<BatchDetailDto> {

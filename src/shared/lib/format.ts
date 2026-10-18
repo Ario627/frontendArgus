@@ -150,3 +150,14 @@ export function formatBytes(bytes: number): string {
 export function nowIso(): string {
   return new Date().toISOString();
 }
+
+const wibDateFormatter = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "Asia/Jakarta",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit"
+});
+
+export function wibIsoDate(daysAgo = 0): string {
+  return wibDateFormatter.format(new Date(Date.now() - daysAgo * 86_400_000));
+}
