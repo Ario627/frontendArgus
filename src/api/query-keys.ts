@@ -69,6 +69,14 @@ export interface MenuItemsFilters {
   readonly limit?: number;
 }
 
+export interface MenuServingsFilters {
+  readonly tanggal?: string;
+  readonly sppgId?: string;
+  readonly titikId?: string;
+  readonly page?: number;
+  readonly limit?: number;
+}
+
 export interface MenuInsightsFilters {
   readonly sppgId?: string;
   readonly titikId?: string;
@@ -149,6 +157,7 @@ export const qk = Object.freeze({
   }),
   menu: Object.freeze({
     items: (filters?: MenuItemsFilters) => ["menu", "items", filters ?? null] as const,
+    servings: (filters?: MenuServingsFilters) => ["menu", "servings", filters ?? null] as const,
     insights: (filters?: MenuInsightsFilters) => ["menu", "insights", filters ?? null] as const
   }),
   tickets: Object.freeze({
@@ -166,6 +175,9 @@ export const qk = Object.freeze({
     list: (filters?: AuditListFilters) => ["audit", "list", filters ?? null] as const
   }),
   parameters: ["parameters"] as const,
+  maps: Object.freeze({
+    directions: (from: string, to: string) => ["maps", "directions", from, to] as const
+  }),
   publicSppg: (slug: string) => ["public", "sppg", slug] as const,
   publicStruk: (token: string) => ["public", "struk", token] as const
 });

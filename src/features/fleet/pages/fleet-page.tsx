@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
 import { isApiError } from "@/api/api-error";
+import { useAuthStore } from "@/features/auth/store/auth.store";
 import { FleetDetailSheet } from "@/features/fleet/components/fleet-detail-sheet";
+import { FleetFormSheet } from "@/features/fleet/components/fleet-form-sheet";
 import { FleetMapPanel } from "@/features/fleet/components/fleet-map-panel";
 import { FleetTable } from "@/features/fleet/components/fleet-table";
 import { useFleetList, type FleetFilterState } from "@/features/fleet/hooks/use-fleet-list";
@@ -17,13 +19,17 @@ import { formatInt } from "@/shared/lib/format";
 import type { FleetDto } from "@/shared/types/fleet.types";
 
 export function FleetPage() {
+  const role = useAuthStore((state) => state.role);
   const [statusFilter, setStatusFilter] = useState<FleetStatus | "">("");
   const [selected, setSelected] = useState<FleetDto | null>(null);
+  const [formOpen, setFormOpen] = useState(false);
+  const [editing, setEditing] = useState<FleetDto | null>(null);
 
   const filters: FleetFilterState = statusFilter === "" ? {} : { status: statusFilter };
   const query = useFleetList(filters);
   const showSkeleton = useDelayedLoading(query.isPending);
   const apiError = isApiError(query.error) ? query.error : null;
+  const canEdit = role === "admin";
 
   const fleets = useMemo(() => query.data?.items ?? [], [query.data]);
   const attentionCount = useMemo(
@@ -43,19 +49,32 @@ export function FleetPage() {
               : `${formatInt(fleets.length)} armada · ${formatInt(attentionCount)} perlu perhatian.`
         }
         actions={
-          <Select
-            aria-label="Filter status"
-            value={statusFilter}
-            onChange={(event) => setStatusFilter(event.target.value as FleetStatus | "")}
-            className="w-48"
-          >
-            <option value="">Semua status</option>
-            {FLEET_STATUSES.map((status) => (
-              <option key={status} value={status}>
-                {FLEET_STATUS_LABELS[status]}
-              </option>
-            ))}
-          </Select>
+          <div className="flex items-center gap-2">
+            <Select
+              aria-label="Filter status"
+              value={statusFilter}
+              onChange={(event) => setStatusFilter(event.target.value as FleetStatus | "")}
+              className="w-48"
+            >
+              <option value="">Semua status</option>
+              {FLEET_STATUSES.map((status) => (
+                <option key={status} value={status}>
+                  {FLEET_STATUS_LABELS[status]}
+                </option>
+              ))}
+            </Select>
+            {canEdit ? (
+              <Button
+                size="sm"
+                onClick={() => {
+                  setEditing(null);
+                  setFormOpen(true);
+                }}
+              >
+                Tambah
+              </Button>
+            ) : null}
+          </div>
         }
       />
 
@@ -98,6 +117,23 @@ export function FleetPage() {
         fleet={selected}
         onOpenChange={(open) => {
           if (!open) setSelected(null);
+        }}
+        onEdit={
+          canEdit
+            ? () => {
+                setEditing(selected);
+                setFormOpen(true);
+              }
+            : undefined
+        }
+      />
+
+      <FleetFormSheet
+        fleet={editing}
+        open={formOpen}
+        onOpenChange={(open) => {
+          setFormOpen(open);
+          if (!open) setEditing(null);
         }}
       />
     </div>

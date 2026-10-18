@@ -22,23 +22,30 @@ export const CONSOLE_NAV: readonly NavGroup[] = Object.freeze([
     label: "Operasional",
     items: Object.freeze([
       { to: "/batches", label: "Batch", roles: Object.freeze(["admin", "dlh_auditor", "sppg_staff"] as const) },
-      { to: "/ledger", label: "Buku besar", roles: Object.freeze(["admin", "dlh_auditor"] as const) },
       { to: "/dispositions", label: "Antrean putusan", roles: Object.freeze(["admin", "dlh_auditor", "sppg_staff"] as const) },
+      { to: "/routes", label: "Rute limpahan", roles: Object.freeze(["admin", "dlh_auditor", "sppg_staff"] as const) },
+      { to: "/fleet", label: "Armada", roles: Object.freeze(["admin", "dlh_auditor"] as const) },
       { to: "/menu", label: "Cermin menu", roles: Object.freeze(["admin", "dlh_auditor", "sppg_staff"] as const) },
-      { to: "/tickets", label: "Tiket warga", roles: Object.freeze(["admin", "dlh_auditor", "sppg_staff"] as const) },
-      { to: "/routes", label: "Rute limpahan", roles: Object.freeze(["admin", "dlh_auditor"] as const) },
-      { to: "/fleet", label: "Armada", roles: Object.freeze(["admin", "dlh_auditor"] as const) }
+      { to: "/tickets", label: "Tiket warga", roles: Object.freeze(["admin", "dlh_auditor", "sppg_staff"] as const) }
     ])
   },
   {
-    label: "Master & audit",
+    label: "Master & perangkat",
     items: Object.freeze([
+      { to: "/sppg", label: "SPPG & titik", roles: Object.freeze(["admin", "dlh_auditor"] as const) },
       { to: "/facilities", label: "Fasilitas", roles: Object.freeze(["admin", "dlh_auditor"] as const) },
-      { to: "/devices", label: "Perangkat", roles: Object.freeze(["admin", "dlh_auditor"] as const) },
-      { to: "/parameters", label: "Parameter", roles: Object.freeze(["admin", "dlh_auditor"] as const) },
+      { to: "/devices", label: "Perangkat & timbangan", roles: Object.freeze(["admin", "dlh_auditor"] as const) },
+      { to: "/parameters", label: "Parameter", roles: Object.freeze(["admin", "dlh_auditor"] as const) }
+    ])
+  },
+  {
+    label: "Audit & sistem",
+    items: Object.freeze([
+      { to: "/ledger", label: "Buku besar", roles: Object.freeze(["admin", "dlh_auditor"] as const) },
       { to: "/anomalies", label: "Anomali", roles: Object.freeze(["admin", "dlh_auditor"] as const) },
       { to: "/audit", label: "Jejak audit", roles: Object.freeze(["admin"] as const) },
-      { to: "/export", label: "Ekspor", roles: Object.freeze(["admin", "dlh_auditor"] as const) }
+      { to: "/export", label: "Ekspor", roles: Object.freeze(["admin", "dlh_auditor"] as const) },
+      { to: "/diagnostik", label: "Diagnostik", roles: Object.freeze(["admin", "dlh_auditor"] as const) }
     ])
   }
 ]);
@@ -48,9 +55,11 @@ export const FIELD_NAV: readonly NavGroup[] = Object.freeze([
     label: "",
     items: Object.freeze([
       { to: "/catat", label: "Catat limbah", roles: Object.freeze(["sppg_staff"] as const) },
+      { to: "/batch-hari-ini", label: "Batch hari ini", roles: Object.freeze(["sppg_staff"] as const) },
+      { to: "/timbangan", label: "Timbangan", roles: Object.freeze(["sppg_staff"] as const) },
       { to: "/rute-hari-ini", label: "Rute hari ini", roles: Object.freeze(["driver"] as const) },
       { to: "/fasilitas-masuk", label: "Fasilitas masuk", roles: Object.freeze(["facility"] as const) },
-      { to: "/antrean", label: "Antrean", roles: Object.freeze(["sppg_staff", "driver", "facility"] as const) }
+      { to: "/antrean", label: "Antrean kirim", roles: Object.freeze(["sppg_staff", "driver", "facility"] as const) }
     ])
   }
 ]);

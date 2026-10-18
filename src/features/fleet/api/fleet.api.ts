@@ -5,6 +5,7 @@ import type { PaginatedItems } from "@/shared/types/api.types";
 import type {
   CreateFleetInput,
   FleetDto,
+  FleetPositionReport,
   TelemetryLatestReport,
   UpdateFleetInput
 } from "@/shared/types/fleet.types";
@@ -35,4 +36,13 @@ export function createFleet(input: CreateFleetInput): Promise<FleetDto> {
 
 export function updateFleet(fleetId: string, input: UpdateFleetInput): Promise<FleetDto> {
   return apiPatch<FleetDto>(endpoints.fleet.update(fleetId), input);
+}
+
+export function fetchFleetPositions(
+  fleetId: string,
+  minutes: number
+): Promise<FleetPositionReport> {
+  return apiGet<FleetPositionReport>(
+    `${endpoints.fleet.positions(fleetId)}${toSearchParams({ minutes })}`
+  );
 }

@@ -47,3 +47,27 @@ export interface CreateMenuItemInput {
   readonly komponen: MenuComponent;
   readonly biayaRp?: number;
 }
+
+export interface MenuServingDto {
+  readonly id: string;
+  readonly tanggal: string;
+  readonly sppgId: string;
+  readonly menuItemId: string;
+  readonly titikId: string | null;
+}
+
+export interface MenuServingCreateResult {
+  readonly id: string;
+  readonly tanggal: string;
+  readonly sppgId: string;
+  readonly menuItemId: string;
+  readonly titikId: string | null;
+  readonly duplicate: boolean;
+}
+
+export interface CreateServingInput {
+  readonly tanggal: string;
+  readonly sppgId?: string;
+  readonly menuItemId: string;
+  readonly titikId?: string;
+}

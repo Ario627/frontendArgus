@@ -35,6 +35,18 @@ export const router = createBrowserRouter([
                 lazy: async () => ({
                   Component: (await import("@/features/field-capture/pages/capture-page")).CapturePage
                 })
+              },
+              {
+                path: "/batch-hari-ini",
+                lazy: async () => ({
+                  Component: (await import("@/features/field-capture/pages/staff-batches-page")).StaffBatchesPage
+                })
+              },
+              {
+                path: "/timbangan",
+                lazy: async () => ({
+                  Component: (await import("@/features/scale/pages/scale-field-page")).ScaleFieldPage
+                })
               }
             ]
           }
@@ -196,6 +208,24 @@ export const router = createBrowserRouter([
                 path: "/dashboard",
                 lazy: async () => ({
                   Component: (await import("@/features/dashboard/pages/dashboard-page")).DashboardPage
+                })
+              },
+              {
+                path: "/devices",
+                lazy: async () => ({
+                  Component: (await import("@/features/devices/pages/devices-page")).DevicesPage
+                })
+              },
+              {
+                path: "/sppg",
+                lazy: async () => ({
+                  Component: (await import("@/features/sppg/pages/sppg-admin-page")).SppgAdminPage
+                })
+              },
+              {
+                path: "/diagnostik",
+                lazy: async () => ({
+                  Component: (await import("@/features/diagnostics/pages/diagnostics-page")).DiagnosticsPage
                 })
               }
             ]

@@ -1,8 +1,10 @@
 import { isApiError } from "@/api/api-error";
 import { useFleetTelemetry } from "@/features/fleet/hooks/use-fleet-telemetry";
+import { FleetPositionsPanel } from "@/features/fleet/components/fleet-positions-panel";
 import { FleetStatusChip } from "@/features/fleet/components/fleet-status-chip";
 import { describeFleet, formatStaleness } from "@/features/fleet/liveness";
 import { ErrorState } from "@/shared/components/feedback/error-state";
+import { Button } from "@/shared/components/ui/button";
 import { Sheet } from "@/shared/components/ui/sheet";
 import { SkeletonList } from "@/shared/components/ui/skeleton";
 import { cn } from "@/shared/lib/cn";
@@ -26,9 +28,10 @@ function InfoRow({ label, children }: InfoRowProps) {
 export interface FleetDetailSheetProps {
   readonly fleet: FleetDto | null;
   readonly onOpenChange: (open: boolean) => void;
+  readonly onEdit?: () => void;
 }
 
-export function FleetDetailSheet({ fleet, onOpenChange }: FleetDetailSheetProps) {
+export function FleetDetailSheet({ fleet, onOpenChange, onEdit }: FleetDetailSheetProps) {
   const telemetry = useFleetTelemetry(fleet?.id ?? null);
   const apiError = isApiError(telemetry.error) ? telemetry.error : null;
 
@@ -47,6 +50,11 @@ export function FleetDetailSheet({ fleet, onOpenChange }: FleetDetailSheetProps)
         <div className="flex flex-wrap items-center gap-3 border-b border-garis pb-4">
           <FleetStatusChip status={fleet.statusOperasional} />
           {fleet.aktif ? null : <span className="text-xs text-ink-lemah">Nonaktif</span>}
+          {onEdit === undefined ? null : (
+            <Button variant="secondary" size="sm" className="ml-auto" onClick={onEdit}>
+              Ubah armada
+            </Button>
+          )}
         </div>
 
         <dl className="flex flex-col">
@@ -114,6 +122,8 @@ export function FleetDetailSheet({ fleet, onOpenChange }: FleetDetailSheetProps)
         {telemetry.data !== undefined && latest === null ? (
           <p className="text-sm text-ink-lemah">Perangkat belum pernah mengirim telemetri.</p>
         ) : null}
+
+        <FleetPositionsPanel fleetId={fleet.id} />
 
         <p className="text-xs text-ink-lemah">
           Kontak pengemudi tidak ditampilkan di aplikasi ini.

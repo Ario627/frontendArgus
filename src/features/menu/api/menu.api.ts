@@ -4,8 +4,11 @@ import { toSearchParams } from "@/shared/lib/search-params";
 import type { PaginatedItems } from "@/shared/types/api.types";
 import type {
   CreateMenuItemInput,
+  CreateServingInput,
   MenuInsightReport,
-  MenuItemDto
+  MenuItemDto,
+  MenuServingCreateResult,
+  MenuServingDto
 } from "@/shared/types/menu.types";
 import type { SppgDetailDto } from "@/shared/types/sppg.types";
 
@@ -37,4 +40,25 @@ export function createMenuItem(input: CreateMenuItemInput): Promise<MenuItemDto>
 
 export function fetchSppgPoints(sppgId: string): Promise<SppgDetailDto> {
   return apiGet<SppgDetailDto>(endpoints.sppg.detail(sppgId));
+}
+
+export interface MenuServingsQuery {
+  readonly tanggal?: string;
+  readonly sppgId?: string;
+  readonly titikId?: string;
+  readonly limit?: number;
+}
+
+export function fetchMenuServings(
+  query: MenuServingsQuery = {}
+): Promise<PaginatedItems<MenuServingDto>> {
+  return apiGet<PaginatedItems<MenuServingDto>>(
+    `${endpoints.menu.servings}${toSearchParams({ ...query })}`
+  );
+}
+
+export function createMenuServing(
+  input: CreateServingInput
+): Promise<MenuServingCreateResult> {
+  return apiPost<MenuServingCreateResult>(endpoints.menu.servings, input);
 }

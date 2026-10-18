@@ -5,6 +5,7 @@ import { useAuthStore } from "@/features/auth/store/auth.store";
 import { InsightList } from "@/features/menu/components/insight-list";
 import { MenuItemSheet } from "@/features/menu/components/menu-item-sheet";
 import { ObservationSheet } from "@/features/menu/components/observation-sheet";
+import { ServingPanel } from "@/features/menu/components/serving-panel";
 import { useMenuInsights } from "@/features/menu/hooks/use-menu-insights";
 import { ErrorState } from "@/shared/components/feedback/error-state";
 import { PageHeader } from "@/shared/components/layout/page-header";
@@ -104,6 +105,11 @@ export function MenuPage() {
       ) : null}
 
       {insights.data === undefined || showSkeleton ? null : <InsightList report={insights.data} />}
+
+      <ServingPanel
+        scopeSppgId={role === "sppg_staff" ? sppgId : null}
+        canAdd={role === "sppg_staff" && sppgId !== null}
+      />
 
       <ObservationSheet
         open={observationOpen}

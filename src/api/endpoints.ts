@@ -119,5 +119,8 @@ export const endpoints = Object.freeze({
   }),
   audit: Object.freeze({
     list: "/audit"
+  }),
+  maps: Object.freeze({
+    directions: "/maps/directions"
   })
 });

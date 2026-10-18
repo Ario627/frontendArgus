@@ -4,6 +4,7 @@ import {
   useFacilityProfile,
   useProfileVersions
 } from "@/features/facilities/hooks/use-facility-profile";
+import { Button } from "@/shared/components/ui/button";
 import { ErrorState } from "@/shared/components/feedback/error-state";
 import { Sheet } from "@/shared/components/ui/sheet";
 import { SkeletonList } from "@/shared/components/ui/skeleton";
@@ -30,12 +31,16 @@ export interface FacilityDetailSheetProps {
   readonly facility: FacilityDto | null;
   readonly onOpenChange: (open: boolean) => void;
   readonly showVersions: boolean;
+  readonly onEdit?: () => void;
+  readonly onEditProfile?: () => void;
 }
 
 export function FacilityDetailSheet({
   facility,
   onOpenChange,
-  showVersions
+  showVersions,
+  onEdit,
+  onEditProfile
 }: FacilityDetailSheetProps) {
   const profile = useFacilityProfile(facility?.id ?? null);
   const versions = useProfileVersions(facility !== null && showVersions ? facility.id : null);
@@ -59,6 +64,20 @@ export function FacilityDetailSheet({
       }`}
     >
       <div className="flex flex-col gap-5">
+        {onEdit === undefined && onEditProfile === undefined ? null : (
+          <div className="flex flex-wrap gap-2">
+            {onEdit === undefined ? null : (
+              <Button variant="secondary" size="sm" onClick={onEdit}>
+                Ubah fasilitas
+              </Button>
+            )}
+            {onEditProfile === undefined ? null : (
+              <Button size="sm" onClick={onEditProfile}>
+                Ubah profil
+              </Button>
+            )}
+          </div>
+        )}
         <dl className="flex flex-col">
           <InfoRow label="Kapasitas">
             {facility.kapasitasKgHari === null ? "Belum diisi" : `${formatKgValue(facility.kapasitasKgHari)}/hari`}

@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Link } from "react-router";
 import { isApiError } from "@/api/api-error";
 import { useAuthStore } from "@/features/auth/store/auth.store";
+import { NarrativePanel } from "@/features/dashboard/components/narrative-panel";
 import { useDashboardSummary } from "@/features/dashboard/hooks/use-dashboard-summary";
 import { RulerTicks } from "@/shared/components/data/ruler-ticks";
 import { ErrorState } from "@/shared/components/feedback/error-state";
@@ -258,6 +259,8 @@ export function DashboardPage() {
               </div>
             </Card>
           </div>
+
+          <NarrativePanel sppgId={data.scopeSppgId} canRefresh={role === "admin"} />
 
           <p className="text-xs text-ink-lemah">
             Angka dihitung dari catatan hari ini (WIB) dan tersaring sesuai akses akun Anda.

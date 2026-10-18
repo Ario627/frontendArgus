@@ -44,6 +44,7 @@ export function StopManifestList({
   }
 
   const destinationOf = (stop: RouteStopDto): string => {
+    if (stop.jenis === "AMBIL") return "Dapur sumber";
     if (stop.fasilitasId === null) return "Tujuan belum ditentukan";
     return facilityNames.get(stop.fasilitasId) ?? `Fasilitas ${stop.fasilitasId.slice(0, 8)}`;
   };
@@ -71,12 +72,7 @@ export function StopManifestList({
                 {stop.urutan}
               </span>
               <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                <p className="truncate text-base text-ink">
-                  {destinationOf(stop)}
-                  {stop.jenis === "AMBIL" ? (
-                    <span className="ml-2 text-xs text-ink-lemah">ambil</span>
-                  ) : null}
-                </p>
+                <p className="truncate text-base text-ink">{destinationOf(stop)}</p>
                 <p className="flex flex-wrap gap-x-3 font-mono text-2xs text-ink-lemah">
                   <span>{ROUTE_STOP_KIND_LABELS[stop.jenis]}</span>
                   <span>batch {stop.batchId.slice(0, 8)}</span>

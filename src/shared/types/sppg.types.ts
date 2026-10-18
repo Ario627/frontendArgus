@@ -13,15 +13,11 @@ export interface SppgDto {
   readonly createdAt: string;
 }
 
-export const DISTRIBUTION_POINT_KINDS = Object.freeze([
-  "sekolah",
-  "paud",
-  "posyandu",
-  "puskesmas",
-  "lainnya"
-] as const);
+import { DISTRIBUTION_POINT_KINDS } from "@/shared/constants/point.constant";
+import type { DistributionPointKind } from "@/shared/constants/point.constant";
 
-export type DistributionPointKind = (typeof DISTRIBUTION_POINT_KINDS)[number];
+export { DISTRIBUTION_POINT_KINDS };
+export type { DistributionPointKind };
 
 export interface PointDto {
   readonly id: string;
@@ -30,6 +26,7 @@ export interface PointDto {
   readonly jenis: DistributionPointKind;
   readonly lat: number | null;
   readonly lng: number | null;
+  readonly aktif: boolean;
 }
 
 export interface SppgDetailDto extends SppgDto {

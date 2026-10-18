@@ -1,8 +1,14 @@
-import { apiGet } from "@/api/axios-client";
+import { apiGet, apiPatch, apiPost, apiPut } from "@/api/axios-client";
 import { endpoints } from "@/api/endpoints";
 import { toSearchParams } from "@/shared/lib/search-params";
 import type { PaginatedItems } from "@/shared/types/api.types";
-import type { FacilityDto, ProfileDto } from "@/shared/types/facility.types";
+import type {
+  AcceptanceProfileRules,
+  CreateFacilityInput,
+  FacilityDto,
+  ProfileDto,
+  UpdateFacilityInput
+} from "@/shared/types/facility.types";
 
 export interface FacilityQuery {
   readonly aktif?: boolean;
@@ -32,4 +38,22 @@ export function fetchProfileVersions(
   return apiGet<PaginatedItems<ProfileDto>>(
     `${endpoints.facilities.profileVersions(facilityId)}${toSearchParams({ ...query })}`
   );
+}
+
+export function createFacility(input: CreateFacilityInput): Promise<FacilityDto> {
+  return apiPost<FacilityDto>(endpoints.facilities.create, input);
+}
+
+export function updateFacility(
+  facilityId: string,
+  input: UpdateFacilityInput
+): Promise<FacilityDto> {
+  return apiPatch<FacilityDto>(endpoints.facilities.update(facilityId), input);
+}
+
+export function saveFacilityProfile(
+  facilityId: string,
+  rules: AcceptanceProfileRules
+): Promise<ProfileDto> {
+  return apiPut<ProfileDto>(endpoints.facilities.updateProfile(facilityId), rules);
 }

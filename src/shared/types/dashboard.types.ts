@@ -27,3 +27,15 @@ export interface DashboardSummary {
     readonly tiketBaru: number;
   };
 }
+
+export type NarrativeStatus = "READY" | "PENDING" | "DISABLED";
+
+export interface NarrativeView {
+  readonly status: NarrativeStatus;
+  readonly narasi: string | null;
+  readonly model: string | null;
+  readonly generatedAt: string | null;
+  readonly expiresAt: string | null;
+  readonly retryAfterSeconds: number | null;
+  readonly reason: string | null;
+}

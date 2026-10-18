@@ -77,6 +77,12 @@ export interface ChainIssueReport {
   readonly reason: "HASH_MISMATCH" | "PREV_LINK_MISMATCH";
 }
 
+export interface TransferConfirmResult {
+  readonly event: LedgerEventDto;
+  readonly duplicate: boolean;
+  readonly transfer: TransferEvaluation;
+}
+
 export interface VerificationReport {
   readonly batchId: string;
   readonly chainOk: boolean;

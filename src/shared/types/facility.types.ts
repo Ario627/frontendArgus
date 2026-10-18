@@ -1,7 +1,9 @@
+import type { FractionCode } from "@/shared/constants/fraction.constant";
+import type { WasteFlow } from "@/shared/constants/flow.constant";
+
 export const FACILITY_LEVELS = Object.freeze(["T1", "T2", "T3", "T4"] as const);
 
 export type FacilityLevel = (typeof FACILITY_LEVELS)[number];
-
 export const FACILITY_KINDS = Object.freeze([
   "komposter",
   "bsf",
@@ -46,4 +48,53 @@ export interface ProfileDto {
   readonly effectiveUntil: string | null;
   readonly createdBy: string | null;
   readonly createdAt: string;
+}
+
+export type VisibleOilPolicy = "fix" | "reject" | "allow";
+
+export interface AcceptanceMoistureRules {
+  readonly passMin: number | null;
+  readonly passMax: number | null;
+  readonly fixAbove: number | null;
+  readonly rejectAbove: number | null;
+}
+
+export interface AcceptanceContaminantRules {
+  readonly plasticPercentMax: number | null;
+  readonly visibleOil: VisibleOilPolicy;
+}
+
+export interface AcceptanceProfileRules {
+  readonly acceptsFractions: readonly FractionCode[];
+  readonly acceptsFlows: readonly WasteFlow[];
+  readonly moisture: AcceptanceMoistureRules;
+  readonly maxAgeHours: number | null;
+  readonly contaminant: AcceptanceContaminantRules;
+  readonly capacityKgPerDay: number | null;
+  readonly operatingHours: string | null;
+  readonly pricePerKg: number | null;
+}
+
+export interface CreateFacilityInput {
+  readonly nama: string;
+  readonly tingkat: FacilityLevel;
+  readonly jenis: FacilityKind;
+  readonly lat: number;
+  readonly lng: number;
+  readonly kapasitasKgHari?: number | null;
+  readonly jamOperasi?: string | null;
+  readonly mitra?: boolean;
+  readonly aktif?: boolean;
+}
+
+export interface UpdateFacilityInput {
+  readonly nama?: string;
+  readonly tingkat?: FacilityLevel;
+  readonly jenis?: FacilityKind;
+  readonly lat?: number;
+  readonly lng?: number;
+  readonly kapasitasKgHari?: number | null;
+  readonly jamOperasi?: string | null;
+  readonly mitra?: boolean;
+  readonly aktif?: boolean;
 }
