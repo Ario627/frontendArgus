@@ -1,0 +1,1 @@
+export type StatusTone = "daun" | "kunyit" | "biru-tinta" | "bata" | "netral";

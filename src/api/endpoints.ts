@@ -1,39 +1,121 @@
-export const API_ENDPOINTS = Object.freeze({
-  auth: {
+export const endpoints = Object.freeze({
+  auth: Object.freeze({
     login: "/auth/login",
-    logout: "/auth/logout",
-  },
-  fleet: {
-    list: "/fleet",
-    detail: (id: string) => `/fleet/${id}` as const,
-    create: "/fleet",
-    update: (id: string) => `/fleet/${id}` as const,
-    remove: (id: string) => `/fleet/${id}` as const,
-    revokeDevice: (id: string) => `/fleet/${id}/revoke-device` as const,
-    assignDevice: (fleetId: string) =>
-      `/device/fleet/${fleetId}/assign` as const,
-    exportCsv: "/fleet/export/csv",
-  },
-  destination: {
-    list: "/destination",
-    detail: (id: string) => `/destination/${id}` as const,
-    create: "/destination",
-    update: (id: string) => `/destination/${id}` as const,
-    remove: (id: string) => `/destination/${id}` as const,
-    map: "/destination/map",
-  },
-  dashboard: {
-    summary: "/dashboard/summary",
-    fleetPositions: "/dashboard/fleet-positions",
-  },
-  optimization: {
-    triggerDailyPlan: "/optimization/trigger",
-  },
-  recovery: {
-    trigger: "/recovery/trigger",
-    assign: "/recovery/assign",
-    result: (id: string) => `/recovery/${id}` as const,
-    suggest: (id: string) => `/recovery/${id}/suggest` as const,
-  },
+    me: "/auth/me"
+  }),
   health: "/health",
-} as const);
+  sppg: Object.freeze({
+    list: "/sppg",
+    create: "/sppg",
+    detail: (id: string) => `/sppg/${id}`,
+    update: (id: string) => `/sppg/${id}`,
+    addPoint: (id: string) => `/sppg/${id}/points`,
+    updatePoint: (id: string, pointId: string) => `/sppg/${id}/points/${pointId}`
+  }),
+  facilities: Object.freeze({
+    list: "/facilities",
+    create: "/facilities",
+    update: (id: string) => `/facilities/${id}`,
+    profile: (id: string) => `/facilities/${id}/profile`,
+    updateProfile: (id: string) => `/facilities/${id}/profile`,
+    profileVersions: (id: string) => `/facilities/${id}/profile/versions`
+  }),
+  batches: Object.freeze({
+    list: "/batches",
+    create: "/batches",
+    detail: (id: string) => `/batches/${id}`,
+    gate: (id: string) => `/batches/${id}/gate`,
+    disposition: (id: string) => `/batches/${id}/disposition`
+  }),
+  dispositions: Object.freeze({
+    list: "/dispositions",
+    run: "/dispositions/run"
+  }),
+  ledger: Object.freeze({
+    list: (batchId: string) => `/ledger/${batchId}`,
+    append: (batchId: string) => `/ledger/${batchId}/events`,
+    verify: (batchId: string) => `/ledger/${batchId}/verify`,
+    confirmTransfer: (batchId: string) => `/ledger/${batchId}/transfer/confirm`,
+    recent: "/ledger/recent"
+  }),
+  sync: Object.freeze({
+    batch: "/sync/batch"
+  }),
+  routes: Object.freeze({
+    list: "/routes",
+    plan: "/routes/plan",
+    detail: (id: string) => `/routes/${id}`,
+    replan: (id: string) => `/routes/${id}/replan`,
+    updateStop: (id: string, stopId: string) => `/routes/${id}/stops/${stopId}`
+  }),
+  menu: Object.freeze({
+    items: "/menu/items",
+    createItem: "/menu/items",
+    servings: "/menu/servings",
+    observations: "/menu/observations",
+    insights: "/menu/insights"
+  }),
+  tickets: Object.freeze({
+    list: "/tickets",
+    detail: (id: string) => `/tickets/${id}`,
+    verify: (id: string) => `/tickets/${id}/verify`,
+    respond: (id: string) => `/tickets/${id}/respond`,
+    close: (id: string) => `/tickets/${id}/close`
+  }),
+  public: Object.freeze({
+    sppg: (slug: string) => `/public/sppg/${slug}`,
+    photos: "/public/photos",
+    tickets: "/public/tickets"
+  }),
+  dashboard: Object.freeze({
+    summary: "/dashboard/summary",
+    narrative: "/dashboard/narrative"
+  }),
+  anomalies: Object.freeze({
+    list: "/anomalies",
+    close: (id: string) => `/anomalies/${id}/close`
+  }),
+  export: Object.freeze({
+    batchesCsv: "/export/batches.csv",
+    batchesPdf: "/export/batches.pdf"
+  }),
+  parameters: Object.freeze({
+    list: "/parameters",
+    update: (key: string) => `/parameters/${key}`
+  }),
+  photos: Object.freeze({
+    upload: "/photos",
+    byHash: (sha256: string) => `/photos/${sha256}`
+  }),
+  fleet: Object.freeze({
+    list: "/fleet",
+    create: "/fleet",
+    detail: (id: string) => `/fleet/${id}`,
+    update: (id: string) => `/fleet/${id}`,
+    positions: (id: string) => `/fleet/${id}/positions`
+  }),
+  devices: Object.freeze({
+    list: "/devices",
+    create: "/devices",
+    detail: (id: string) => `/devices/${id}`,
+    revoke: (id: string) => `/devices/${id}/revoke`,
+    rotateSecret: (id: string) => `/devices/${id}/rotate-secret`
+  }),
+  telemetry: Object.freeze({
+    latest: (fleetId: string) => `/telemetry/${fleetId}/latest`
+  }),
+  scale: Object.freeze({
+    pendingList: "/scale/pending",
+    pendingDetail: (id: string) => `/scale/pending/${id}`,
+    link: (id: string) => `/scale/pending/${id}/link`
+  }),
+  chain: Object.freeze({
+    verify: "/chain/verify"
+  }),
+  retention: Object.freeze({
+    run: "/retention/run"
+  }),
+  audit: Object.freeze({
+    list: "/audit"
+  })
+});

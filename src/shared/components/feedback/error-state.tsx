@@ -1,107 +1,37 @@
-import { cn } from "../../../lib/cn";
-import { AlertCircleIcon, RefreshCwIcon } from "lucide-react";
-import type { ReactNode } from "react";
+import { cn } from "@/shared/lib/cn";
+import { Button } from "@/shared/components/ui/button";
 
-interface ErrorStateProps {
-  title?: string;
-  message?: ReactNode;
-  onRetry?: () => void;
-  retryLabel?: string;
-  isRetrying?: boolean;
-  className?: string;
-  variant?: "inline" | "page";
+export interface ErrorStateProps {
+  readonly title?: string;
+  readonly description?: string;
+  readonly requestId?: string | null;
+  readonly onRetry?: () => void;
+  readonly className?: string;
 }
 
 export function ErrorState({
-  title = "Gagal memuat data",
-  message = "Terjadi kesalahan saat memuat data. Silakan coba lagi.",
+  title = "Data tidak dapat dimuat",
+  description = "Periksa jaringan lalu coba lagi.",
+  requestId,
   onRetry,
-  retryLabel = "Coba Lagi",
-  isRetrying = false,
-  className,
-  variant = "inline",
+  className
 }: ErrorStateProps) {
-  const isPage = variant === "page";
+  const code = requestId ?? null;
 
   return (
-    <div
-      className={cn(
-        "flex flex-col items-center justify-center text-center",
-        isPage ? "min-h-[400px]  border border-border bg-background p-8" : " border border-destructive/20 bg-destructive/5 p-6",
-        className,
+    <div role="alert" className={cn("flex flex-col items-start gap-2 py-8", className)}>
+      <p className="text-md font-medium text-ink">{title}</p>
+      <p className="max-w-prose text-sm text-ink-lemah">{description}</p>
+      {onRetry === undefined ? null : (
+        <Button variant="secondary" onClick={onRetry} className="mt-2">
+          Coba lagi
+        </Button>
       )}
-      role="alert"
-      aria-live="assertive"
-    >
-      <div className={cn(
-        "flex h-12 w-12 items-center justify-center border",
-        isPage ? "bg-destructive/10" : "bg-destructive/20",
-      )}>
-        <AlertCircleIcon className="h-6 w-6 text-destructive" aria-hidden />
-      </div>
-
-      <h3 className="mt-4 text-sm font-semibold text-foreground">{title}</h3>
-
-      {message && (
-        <p className="mt-2 max-w-md text-sm text-muted-foreground">{message}</p>
+      {code === null || code === "" ? null : (
+        <p className="mt-1 font-mono text-xs text-ink-lemah">
+          Sertakan kode ini saat melapor: {code}
+        </p>
       )}
-
-      {onRetry && (
-        <button
-          type="button"
-          onClick={onRetry}
-          disabled={isRetrying}
-          className={cn(
-            "mt-6 inline-flex items-center gap-2  px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-            "bg-brand text-brand-foreground hover:bg-brand/90",
-            "disabled:pointer-events-none disabled:opacity-50",
-          )}
-        >
-          <RefreshCwIcon
-            className={cn("h-4 w-4", isRetrying && "animate-spin")}
-            aria-hidden
-          />
-          <span>{isRetrying ? "Memuat ulang..." : retryLabel}</span>
-        </button>
-      )}
-    </div>
-  );
-}
-
-interface NetworkErrorProps extends Omit<ErrorStateProps, "title" | "message"> {
-  onRetry: () => void;
-}
-
-export function NetworkError(props: NetworkErrorProps) {
-  return (
-    <ErrorState
-      {...props}
-      title="Tidak dapat terhubung ke server"
-      message="Periksa koneksi internet Anda dan coba lagi."
-    />
-  );
-}
-
-interface ForbiddenErrorProps {
-  className?: string;
-}
-
-export function ForbiddenError({ className }: ForbiddenErrorProps) {
-  return (
-    <div
-      className={cn(
-        "flex flex-col items-center justify-center  border border-border bg-background p-8 text-center",
-        className,
-      )}
-      role="alert"
-    >
-      <div className="flex h-12 w-12 items-center justify-center inline-flex border border-status-offline bg-status-offline/10">
-        <AlertCircleIcon className="h-6 w-6 text-status-offline" aria-hidden />
-      </div>
-      <h3 className="mt-4 text-sm font-semibold text-foreground">Akses Ditolak</h3>
-      <p className="mt-2 max-w-md text-sm text-muted-foreground">
-        Anda tidak memiliki izin untuk mengakses halaman ini. Hubungi administrator jika ini adalah kesalahan.
-      </p>
     </div>
   );
 }

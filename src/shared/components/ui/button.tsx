@@ -1,74 +1,78 @@
-import { Slot } from "@radix-ui/react-slot";
-import { cva, type VariantProps } from "class-variance-authority";
-import type { ButtonHTMLAttributes, Ref } from "react";
-import { cn } from "../../../lib/cn";
+import type { ComponentPropsWithRef } from "react";
+import { cn } from "@/shared/lib/cn";
+import { Spinner } from "@/shared/components/ui/spinner";
 
-export const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap border border-border text-sm font-medium uppercase tracking-wide transition-colors duration-150 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-40 active:opacity-80",
-  {
-    variants: {
-      variant: {
-        default:
-          "border-brand bg-brand text-brand-foreground hover:bg-brand/90 hover:border-brand",
-        destructive:
-          "border-destructive bg-destructive text-destructive-foreground hover:bg-destructive/90 hover:border-destructive",
-        outline:
-          "border-border bg-transparent text-foreground hover:border-foreground hover:bg-muted",
-        secondary:
-          "border-border bg-muted text-foreground hover:bg-muted/70",
-        ghost: "border-transparent text-muted-foreground hover:bg-muted hover:text-foreground",
-        link: "border-transparent text-brand underline-offset-4 hover:underline",
-      },
-      size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-9 px-3 text-xs",
-        lg: "h-11 px-6",
-        icon: "h-10 w-10",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
-    },
-  },
-);
+export type ButtonVariant = "primary" | "secondary" | "danger" | "ghost";
+export type ButtonSize = "sm" | "md" | "lg";
 
-export interface ButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
-  asChild?: boolean;
-  loading?: boolean;
-  ref?: Ref<HTMLButtonElement>;
+const BASE_CLASSES =
+  "relative inline-flex select-none items-center justify-center rounded-kontrol font-medium whitespace-nowrap transition-colors duration-150 ease-out disabled:cursor-not-allowed disabled:opacity-50";
+
+const VARIANT_CLASSES: Readonly<Record<ButtonVariant, string>> = Object.freeze({
+  primary:
+    "bg-biru-tinta text-kertas hover:bg-[color-mix(in_oklab,var(--color-biru-tinta)_92%,var(--color-ink))]",
+  secondary: "border border-garis bg-kertas text-ink hover:bg-[#EFEFED]",
+  danger: "border border-bata bg-kertas text-bata hover:bg-bata/8",
+  ghost: "text-ink hover:bg-ink/5"
+});
+
+const SIZE_CLASSES: Readonly<Record<ButtonSize, string>> = Object.freeze({
+  sm: "h-9 gap-1.5 px-3 text-sm",
+  md: "h-11 gap-2 px-4 text-sm",
+  lg: "h-13 gap-2 px-5 text-md"
+});
+
+const SPINNER_OFFSET_CLASSES: Readonly<Record<ButtonSize, string>> = Object.freeze({
+  sm: "left-2.5",
+  md: "left-3",
+  lg: "left-4"
+});
+
+export interface ButtonStyleOptions {
+  readonly variant?: ButtonVariant;
+  readonly size?: ButtonSize;
+  readonly fullWidth?: boolean;
+  readonly className?: string;
+}
+
+export function buttonStyles({
+  variant = "primary",
+  size = "md",
+  fullWidth = false,
+  className
+}: ButtonStyleOptions): string {
+  return cn(BASE_CLASSES, VARIANT_CLASSES[variant], SIZE_CLASSES[size], fullWidth && "w-full", className);
+}
+
+export interface ButtonProps extends ComponentPropsWithRef<"button"> {
+  readonly variant?: ButtonVariant;
+  readonly size?: ButtonSize;
+  readonly loading?: boolean;
+  readonly fullWidth?: boolean;
 }
 
 export function Button({
-  className,
-  variant,
-  size,
-  asChild = false,
+  variant = "primary",
+  size = "md",
   loading = false,
-  disabled,
+  fullWidth = false,
+  className,
   children,
-  ref,
-  ...props
+  disabled = false,
+  type = "button",
+  ...rest
 }: ButtonProps) {
-  const Comp = asChild ? Slot : "button";
   return (
-    <Comp
-      className={cn(buttonVariants({ variant, size, className }))}
-      ref={ref}
-      {...(!asChild && { disabled: disabled ?? loading })}
-      {...props}
+    <button
+      {...rest}
+      type={type}
+      disabled={disabled || loading}
+      aria-busy={loading || undefined}
+      className={buttonStyles({ variant, size, fullWidth, className })}
     >
-      {loading && !asChild ? (
-        <span
-          className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
-          aria-hidden
-        />
-      ) : (
-        children
-      )}
-    </Comp>
+      {loading ? <Spinner size="sm" className={cn("absolute", SPINNER_OFFSET_CLASSES[size])} /> : null}
+      {children}
+      {loading ? <span className="sr-only">Memuat</span> : null}
+    </button>
   );
 }
-

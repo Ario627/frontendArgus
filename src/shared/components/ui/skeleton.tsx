@@ -1,105 +1,25 @@
-import { cn } from "../../../lib/cn";
+import { cn } from "@/shared/lib/cn";
 
-interface SkeletonProps {
-  className?: string;
+export interface SkeletonProps {
+  readonly className?: string;
 }
 
 export function Skeleton({ className }: SkeletonProps) {
-  return (
-    <div
-      className={cn(
-        "animate-pulse bg-muted",
-        className,
-      )}
-      aria-hidden
-    />
-  );
+  return <div aria-hidden className={cn("animate-pulse rounded-kontrol bg-garis", className)} />;
 }
 
-export function SkeletonText({
-  lines = 3,
-  className,
-}: {
-  lines?: number;
-  className?: string;
-}) {
+export interface SkeletonListProps {
+  readonly rows?: number;
+  readonly rowClassName?: string;
+  readonly className?: string;
+}
+
+export function SkeletonList({ rows = 5, rowClassName, className }: SkeletonListProps) {
   return (
-    <div className={cn("space-y-2", className)} aria-hidden>
-      {Array.from({ length: lines }).map((_, i) => (
-        <Skeleton
-          key={i}
-          className={cn("h-4 w-full", i === lines - 1 && "w-3/4")}
-        />
+    <div role="status" aria-label="Memuat" className={cn("flex flex-col gap-2", className)}>
+      {Array.from({ length: rows }, (_, index) => (
+        <Skeleton key={index} className={cn("h-11 w-full", rowClassName)} />
       ))}
-    </div>
-  );
-}
-
-export function SkeletonCard({ className }: { className?: string }) {
-  return (
-    <div
-      className={cn("border border-border bg-card p-5", className)}
-      aria-hidden
-    >
-      <div className="flex items-start justify-between">
-        <Skeleton className="h-8 w-8" />
-        <Skeleton className="h-2 w-2 rounded-full" />
-      </div>
-      <Skeleton className="mt-4 h-7 w-20" />
-      <Skeleton className="mt-2 h-3.5 w-24" />
-    </div>
-  );
-}
-
-export function SkeletonTableRow({
-  columns = 5,
-  className,
-}: {
-  columns?: number;
-  className?: string;
-}) {
-  return (
-    <tr className={cn("border-b border-border", className)} aria-hidden>
-      {Array.from({ length: columns }).map((_, i) => (
-        <td key={i} className="px-4 py-3">
-          <Skeleton className="h-4 w-full" />
-        </td>
-      ))}
-    </tr>
-  );
-}
-
-export function SkeletonTable({
-  rows = 5,
-  columns = 5,
-  className,
-}: {
-  rows?: number;
-  columns?: number;
-  className?: string;
-}) {
-  return (
-    <div
-      className={cn("overflow-hidden border border-border bg-card", className)}
-      aria-busy="true"
-      aria-live="polite"
-    >
-      <table className="w-full">
-        <thead>
-          <tr className="border-b border-border bg-muted/50">
-            {Array.from({ length: columns }).map((_, i) => (
-              <th key={i} className="px-4 py-3 text-left">
-                <Skeleton className="h-4 w-20" />
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {Array.from({ length: rows }).map((_, i) => (
-            <SkeletonTableRow key={i} columns={columns} />
-          ))}
-        </tbody>
-      </table>
     </div>
   );
 }

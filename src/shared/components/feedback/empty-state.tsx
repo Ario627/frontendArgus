@@ -1,65 +1,21 @@
-import { cn } from "../../../lib/cn";
-import { InboxIcon, type LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
+import { cn } from "@/shared/lib/cn";
 
-interface EmptyStateProps {
-  icon?: LucideIcon;
-  title?: string;
-  description?: ReactNode;
-  action?: ReactNode;
-  className?: string;
+export interface EmptyStateProps {
+  readonly title: string;
+  readonly description?: string;
+  readonly action?: ReactNode;
+  readonly className?: string;
 }
 
-export function EmptyState({
-  icon: Icon = InboxIcon,
-  title = "Tidak ada data",
-  description,
-  action,
-  className,
-}: EmptyStateProps) {
+export function EmptyState({ title, description, action, className }: EmptyStateProps) {
   return (
-    <div
-      className={cn(
-        "flex flex-col items-center justify-center  border border-dashed border-border bg-muted/20 px-6 py-12 text-center",
-        className,
+    <div className={cn("flex flex-col items-start gap-2 py-10", className)}>
+      <p className="text-md font-medium text-ink">{title}</p>
+      {description === undefined ? null : (
+        <p className="max-w-prose text-sm text-ink-lemah">{description}</p>
       )}
-    >
-      <div className="flex h-12 w-12 items-center justify-center inline-flex border border-border bg-muted">
-        <Icon className="h-6 w-6 text-muted-foreground" aria-hidden />
-      </div>
-      <h3 className="mt-4 text-sm font-medium text-foreground">{title}</h3>
-      {description && (
-        <p className="mt-2 max-w-sm text-sm text-muted-foreground">
-          {description}
-        </p>
-      )}
-      {action && <div className="mt-6">{action}</div>}
+      {action === undefined ? null : <div className="mt-2">{action}</div>}
     </div>
-  );
-}
-
-interface EmptyStateWithCTAProps extends Omit<EmptyStateProps, "action"> {
-  ctaLabel: string;
-  onCtaClick: () => void;
-}
-
-export function EmptyStateWithCTA({
-  ctaLabel,
-  onCtaClick,
-  ...props
-}: EmptyStateWithCTAProps) {
-  return (
-    <EmptyState
-      {...props}
-      action={
-        <button
-          type="button"
-          onClick={onCtaClick}
-          className=" bg-brand px-4 py-2 text-sm font-medium text-brand-foreground transition-colors hover:bg-brand/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        >
-          {ctaLabel}
-        </button>
-      }
-    />
   );
 }
