@@ -28,6 +28,8 @@ export const FIELD_ROLES: readonly UserRole[] = Object.freeze([
   "facility"
 ] as const);
 
+export const CAPTURE_ROLES: readonly UserRole[] = Object.freeze(["sppg_staff"] as const);
+
 const USER_ROLE_SET: ReadonlySet<string> = new Set(USER_ROLES);
 
 export function isUserRole(value: unknown): value is UserRole {

@@ -1,17 +1,26 @@
-import { type ReactNode } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "sonner";
-import { queryClient } from "./query-client";
+import { RouterProvider } from "react-router";
+import { AppErrorBoundary } from "@/app/error-boundary";
+import { ConfigErrorScreen } from "@/app/config-error-screen";
+import { queryClient } from "@/app/query-client";
+import { router } from "@/app/router";
+import { registerSessionCleanup } from "@/features/auth/store/auth.store";
+import { ToastViewport } from "@/shared/components/ui/toast";
+import { envIsValid, envIssues } from "@/shared/lib/env";
 
-interface ProvidersProps {
-  readonly children: ReactNode;
-}
+registerSessionCleanup(() => {
+  queryClient.clear();
+});
 
-export function Providers({ children }: ProvidersProps) {
+export function AppProviders() {
+  if (!envIsValid) return <ConfigErrorScreen issues={envIssues} />;
+
   return (
-    <QueryClientProvider client={queryClient}>
-      {children}
-      <Toaster position="top-right" richColors closeButton />
-    </QueryClientProvider>
+    <AppErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+      <ToastViewport />
+    </AppErrorBoundary>
   );
 }
