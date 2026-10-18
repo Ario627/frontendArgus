@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Navigate, useLocation, useNavigate, useSearchParams } from "react-router";
 import { LoginForm } from "@/features/auth/components/login-form";
-import { consumeLogoutReason, useAuthStore } from "@/features/auth/store/auth.store";
+import { clearLogoutReason, peekLogoutReason, useAuthStore } from "@/features/auth/store/auth.store";
 import { homePathForRole } from "@/shared/constants/nav.constant";
 
 const REASON_MESSAGES: Readonly<Record<string, string>> = Object.freeze({
@@ -18,11 +18,13 @@ export function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
-  const [notice, setNotice] = useState<string | null>(null);
+  const [notice] = useState(() => {
+    const reason = peekLogoutReason();
+    return reason === null ? null : (REASON_MESSAGES[reason] ?? null);
+  });
 
   useEffect(() => {
-    const reason = consumeLogoutReason();
-    if (reason !== null) setNotice(REASON_MESSAGES[reason] ?? null);
+    clearLogoutReason();
   }, []);
 
   if (token !== null) return <Navigate to="/" replace />;

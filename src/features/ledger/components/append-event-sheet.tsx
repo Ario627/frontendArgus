@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { ChipButton } from "@/shared/components/ui/chip";
 import { Field } from "@/shared/components/ui/field";
 import { Input } from "@/shared/components/ui/input";
@@ -54,17 +54,21 @@ export function AppendEventSheet({
   const [note, setNote] = useState("");
   const [sisi, setSisi] = useState<TransferSide | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [wasOpen, setWasOpen] = useState(open);
 
-  useEffect(() => {
-    if (!open) return;
-    const next = defaultType ?? options[0]?.tipe ?? "DITERIMA";
-    setTipe(next);
-    setWeightText(APPEND_TYPE_SPECS[next].prefillWeight ? formatKgValue(batchWeightKg, "manual") : "");
-    setMode("now");
-    setNote("");
-    setSisi(null);
-    setError(null);
-  }, [open, defaultType, batchWeightKg, options]);
+  if (open !== wasOpen) {
+    setWasOpen(open);
+    if (open) {
+      const next = defaultType ?? options[0]?.tipe ?? "DITERIMA";
+      setTipe(next);
+      setWeightText(APPEND_TYPE_SPECS[next].prefillWeight ? formatKgValue(batchWeightKg, "manual") : "");
+      setMode("now");
+      setNote("");
+      setSisi(null);
+      setError(null);
+    }
+  }
+
   const spec = APPEND_TYPE_SPECS[tipe];
 
   if (options.length === 0) return null;

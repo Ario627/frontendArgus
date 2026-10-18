@@ -1,4 +1,5 @@
 import type { ComponentPropsWithRef } from "react";
+import { Link, type LinkProps } from "react-router";
 import { cn } from "@/shared/lib/cn";
 import { Spinner } from "@/shared/components/ui/spinner";
 
@@ -35,7 +36,7 @@ export interface ButtonStyleOptions {
   readonly className?: string;
 }
 
-export function buttonStyles({
+function buttonStyles({
   variant = "primary",
   size = "md",
   fullWidth = false,
@@ -75,4 +76,20 @@ export function Button({
       {loading ? <span className="sr-only">Memuat</span> : null}
     </button>
   );
+}
+
+export interface ButtonLinkProps extends LinkProps {
+  readonly variant?: ButtonVariant;
+  readonly size?: ButtonSize;
+  readonly fullWidth?: boolean;
+}
+
+export function ButtonLink({
+  variant = "primary",
+  size = "md",
+  fullWidth = false,
+  className,
+  ...rest
+}: ButtonLinkProps) {
+  return <Link {...rest} className={buttonStyles({ variant, size, fullWidth, className })} />;
 }

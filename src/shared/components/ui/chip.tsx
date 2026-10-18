@@ -4,7 +4,7 @@ import { cn } from "@/shared/lib/cn";
 const CHIP_BASE_CLASSES =
   "inline-flex items-center rounded-full border px-2.5 font-mono text-xs whitespace-nowrap";
 
-export interface ChipProps extends ComponentPropsWithRef<"span"> {}
+export type ChipProps = ComponentPropsWithRef<"span">;
 
 export function Chip({ className, ...rest }: ChipProps) {
   return <span {...rest} className={cn(CHIP_BASE_CLASSES, "h-7 border-garis text-ink", className)} />;

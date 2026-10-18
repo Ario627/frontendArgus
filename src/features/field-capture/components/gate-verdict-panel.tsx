@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/shared/components/ui/button";
 import { ChipButton } from "@/shared/components/ui/chip";
 import { Stamp } from "@/shared/components/ui/stamp";
@@ -41,10 +41,12 @@ export function GateVerdictPanel({
 }: GateVerdictPanelProps) {
   const detail = readGateDetail(batch.gateDetail);
   const [moisture, setMoisture] = useState<string>(batch.moistureProxy ?? "");
+  const [previousProxy, setPreviousProxy] = useState(batch.moistureProxy);
 
-  useEffect(() => {
+  if (batch.moistureProxy !== previousProxy) {
+    setPreviousProxy(batch.moistureProxy);
     setMoisture(batch.moistureProxy ?? "");
-  }, [batch.moistureProxy]);
+  }
 
   const canRegate = batch.status === "GAGAL_GATE";
 

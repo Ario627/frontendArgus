@@ -5,6 +5,7 @@
 @import "@fontsource/instrument-sans/latin-700.css";
 @import "@fontsource/ibm-plex-mono/latin-400.css";
 @import "@fontsource/ibm-plex-mono/latin-500.css";
+@import "./print.css";
 
 @theme {
   --color-kertas: #f7f7f5;
@@ -43,6 +44,8 @@
   --text-2xl--line-height: 34px;
   --text-field: 40px;
   --text-field--line-height: 44px;
+  --text-display: 44px;
+  --text-display--line-height: 50px;
 
   --tracking-label: 0.04em;
 

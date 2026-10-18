@@ -1,14 +1,15 @@
 import { useMemo } from "react";
-import { Link, useSearchParams } from "react-router";
-import {
-  BatchFilterBar,
-  readBatchFilters,
-  writeBatchFilters
-} from "@/features/batch/components/batch-filter-bar";
+import { useSearchParams } from "react-router";
+import { BatchFilterBar } from "@/features/batch/components/batch-filter-bar";
 import { BatchTable } from "@/features/batch/components/batch-table";
-import { useBatches, type BatchFilterState } from "@/features/batch/hooks/use-batches";
+import {
+  readBatchFilters,
+  useBatches,
+  writeBatchFilters,
+  type BatchFilterState
+} from "@/features/batch/hooks/use-batches";
 import { useAuthStore } from "@/features/auth/store/auth.store";
-import { Button, buttonStyles } from "@/shared/components/ui/button";
+import { Button, ButtonLink } from "@/shared/components/ui/button";
 import { EmptyState } from "@/shared/components/feedback/empty-state";
 import { ErrorState } from "@/shared/components/feedback/error-state";
 import { PageHeader } from "@/shared/components/layout/page-header";
@@ -46,9 +47,9 @@ export function BatchesPage() {
         }
         actions={
           role === "sppg_staff" ? (
-            <Link to="/catat" className={buttonStyles({ variant: "primary", size: "sm" })}>
+            <ButtonLink to="/catat" variant="primary" size="sm">
               Catat batch
-            </Link>
+            </ButtonLink>
           ) : null
         }
       />
@@ -85,9 +86,9 @@ export function BatchesPage() {
             }
             action={
               role === "sppg_staff" ? (
-                <Link to="/catat" className={buttonStyles({ variant: "primary", size: "sm" })}>
+                <ButtonLink to="/catat" variant="primary" size="sm">
                   Catat batch
-                </Link>
+                </ButtonLink>
               ) : undefined
             }
           />

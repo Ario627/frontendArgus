@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { isApiError } from "@/api/api-error";
 import { useRegate } from "@/features/batch/hooks/use-regate";
 import { Button } from "@/shared/components/ui/button";
@@ -28,13 +28,16 @@ export function RegateSheet({
   const [moisture, setMoisture] = useState<MoistureProxy | null>(currentMoistureProxy);
   const [visibleOil, setVisibleOil] = useState(currentVisibleOil);
   const [error, setError] = useState<string | null>(null);
+  const [wasOpen, setWasOpen] = useState(open);
 
-  useEffect(() => {
-    if (!open) return;
-    setMoisture(currentMoistureProxy);
-    setVisibleOil(currentVisibleOil);
-    setError(null);
-  }, [open, currentMoistureProxy, currentVisibleOil]);
+  if (open !== wasOpen) {
+    setWasOpen(open);
+    if (open) {
+      setMoisture(currentMoistureProxy);
+      setVisibleOil(currentVisibleOil);
+      setError(null);
+    }
+  }
 
   const submit = () => {
     setError(null);

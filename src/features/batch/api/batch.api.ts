@@ -3,6 +3,7 @@ import { endpoints } from "@/api/endpoints";
 import { toSearchParams } from "@/shared/lib/search-params";
 import type { PaginatedItems } from "@/shared/types/api.types";
 import type { BatchDetailDto, BatchDto, ReGateInput } from "@/shared/types/batch.types";
+import type { StrukLinkDto } from "@/shared/types/struk.types";
 
 export interface BatchQuery {
   readonly sppgId?: string;
@@ -25,4 +26,8 @@ export function fetchBatchDetail(batchId: string): Promise<BatchDetailDto> {
 
 export function regateBatch(batchId: string, patch: ReGateInput): Promise<BatchDetailDto> {
   return apiPost<BatchDetailDto>(endpoints.batches.gate(batchId), patch);
+}
+
+export function mintStrukLink(batchId: string): Promise<StrukLinkDto> {
+  return apiPost<StrukLinkDto>(endpoints.batches.strukLink(batchId));
 }

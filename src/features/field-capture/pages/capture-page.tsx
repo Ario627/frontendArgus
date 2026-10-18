@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type Resolver } from "react-hook-form";
 import { useAuthStore } from "@/features/auth/store/auth.store";
@@ -42,7 +42,7 @@ function makeDefaults(): CaptureFormValues {
 
 export function CapturePage() {
   const sppgId = useAuthStore((state) => state.user?.sppgId ?? null);
-  const clientEventIdRef = useRef(newClientEventId());
+  const [clientEventId, setClientEventId] = useState(() => newClientEventId());
   const [step, setStep] = useState<CaptureStep>(1);
   const [submissionId, setSubmissionId] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -82,7 +82,6 @@ export function CapturePage() {
       return;
     }
     setSubmitError(null);
-    const clientEventId = clientEventIdRef.current;
     const payload = toCreateBatchPayload(values, { sppgId, clientEventId });
     void outbox
       .enqueue({ tipe: "batch", payload: { ...payload } as Record<string, unknown> })
@@ -96,7 +95,7 @@ export function CapturePage() {
   });
 
   const startNew = () => {
-    clientEventIdRef.current = newClientEventId();
+    setClientEventId(newClientEventId());
     setSubmissionId(null);
     setSubmitError(null);
     setStep(1);

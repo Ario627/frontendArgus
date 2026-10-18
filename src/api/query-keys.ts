@@ -166,5 +166,6 @@ export const qk = Object.freeze({
     list: (filters?: AuditListFilters) => ["audit", "list", filters ?? null] as const
   }),
   parameters: ["parameters"] as const,
-  publicSppg: (slug: string) => ["public", "sppg", slug] as const
+  publicSppg: (slug: string) => ["public", "sppg", slug] as const,
+  publicStruk: (token: string) => ["public", "struk", token] as const
 });

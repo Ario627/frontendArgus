@@ -10,28 +10,33 @@ export function ToastViewport() {
   const dismiss = useToastStore((state) => state.dismiss);
   const [rendered, setRendered] = useState<ToastMessage | null>(null);
   const [leaving, setLeaving] = useState(false);
+  const [tracked, setTracked] = useState(current);
 
-  useEffect(() => {
+  if (current !== tracked) {
+    setTracked(current);
     if (current !== null) {
       setRendered(current);
       setLeaving(false);
-      return;
+    } else if (rendered !== null) {
+      setLeaving(true);
     }
-    if (rendered === null) return;
-    setLeaving(true);
+  }
+
+  useEffect(() => {
+    if (!leaving || current !== null) return;
     const timer = setTimeout(() => {
       setRendered(null);
       setLeaving(false);
     }, EXIT_DURATION_MS);
     return () => clearTimeout(timer);
-  }, [current, rendered]);
+  }, [leaving, current]);
 
   if (rendered === null) return null;
 
   const action = rendered.action;
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-[60] flex justify-center px-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-60 flex justify-center px-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
       <div
         key={rendered.id}
         role="status"

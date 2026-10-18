@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import {
   Dialog,
   DialogContent,
@@ -38,10 +38,12 @@ export function ConfirmDialog({
   children
 }: ConfirmDialogProps) {
   const [typed, setTyped] = useState("");
+  const [wasOpen, setWasOpen] = useState(open);
 
-  useEffect(() => {
+  if (open !== wasOpen) {
+    setWasOpen(open);
     if (open) setTyped("");
-  }, [open]);
+  }
 
   const typedOk = typedWord === undefined || typed.trim().toUpperCase() === typedWord.toUpperCase();
 

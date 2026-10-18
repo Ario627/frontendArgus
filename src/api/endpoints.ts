@@ -25,7 +25,8 @@ export const endpoints = Object.freeze({
     create: "/batches",
     detail: (id: string) => `/batches/${id}`,
     gate: (id: string) => `/batches/${id}/gate`,
-    disposition: (id: string) => `/batches/${id}/disposition`
+    disposition: (id: string) => `/batches/${id}/disposition`,
+    strukLink: (id: string) => `/batches/${id}/struk-link`
   }),
   dispositions: Object.freeze({
     list: "/dispositions",
@@ -65,7 +66,8 @@ export const endpoints = Object.freeze({
   public: Object.freeze({
     sppg: (slug: string) => `/public/sppg/${slug}`,
     photos: "/public/photos",
-    tickets: "/public/tickets"
+    tickets: "/public/tickets",
+    struk: (token: string) => `/public/struk/${token}`
   }),
   dashboard: Object.freeze({
     summary: "/dashboard/summary",

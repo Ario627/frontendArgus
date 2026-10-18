@@ -1,5 +1,4 @@
-import { Chip } from "@/shared/components/ui/chip";
-import { ChipButton } from "@/shared/components/ui/button";
+import { Chip, ChipButton } from "@/shared/components/ui/chip";
 import { KgValue } from "@/shared/components/data/kg-value";
 import { APPEND_TYPE_SPECS, type UiAppendType } from "@/features/ledger/ledger-append";
 import { FLOW_LABELS } from "@/shared/constants/flow.constant";

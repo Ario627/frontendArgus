@@ -1,34 +1,9 @@
 import { Button } from "@/shared/components/ui/button";
 import { Select } from "@/shared/components/ui/select";
-import { BATCH_STATUSES, BATCH_STATUS_LABELS } from "@/shared/constants/batch.constant";
-import { FLOW_LABELS, WASTE_FLOWS } from "@/shared/constants/flow.constant";
-import { DISPOSITION_TIERS, TIER_LABELS } from "@/shared/constants/tier.constant";
+import { BATCH_STATUSES, BATCH_STATUS_LABELS, type BatchStatus } from "@/shared/constants/batch.constant";
+import { FLOW_LABELS, WASTE_FLOWS, type WasteFlow } from "@/shared/constants/flow.constant";
+import { DISPOSITION_TIERS, TIER_LABELS, type DispositionTier } from "@/shared/constants/tier.constant";
 import type { BatchFilterState } from "@/features/batch/hooks/use-batches";
-
-export function readBatchFilters(params: URLSearchParams): BatchFilterState {
-  const status = params.get("status") ?? "";
-  const tier = params.get("tier") ?? "";
-  const aliran = params.get("aliran") ?? "";
-  return {
-    ...(BATCH_STATUSES.includes(status as (typeof BATCH_STATUSES)[number])
-      ? { status: status as (typeof BATCH_STATUSES)[number] }
-      : {}),
-    ...(DISPOSITION_TIERS.includes(tier as (typeof DISPOSITION_TIERS)[number])
-      ? { tier: tier as (typeof DISPOSITION_TIERS)[number] }
-      : {}),
-    ...(WASTE_FLOWS.includes(aliran as (typeof WASTE_FLOWS)[number])
-      ? { aliran: aliran as (typeof WASTE_FLOWS)[number] }
-      : {})
-  };
-}
-
-export function writeBatchFilters(filters: BatchFilterState): URLSearchParams {
-  const params = new URLSearchParams();
-  if (filters.status !== undefined) params.set("status", filters.status);
-  if (filters.tier !== undefined) params.set("tier", filters.tier);
-  if (filters.aliran !== undefined) params.set("aliran", filters.aliran);
-  return params;
-}
 
 export interface BatchFilterBarProps {
   readonly filters: BatchFilterState;

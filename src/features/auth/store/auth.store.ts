@@ -34,10 +34,13 @@ export function writeLogoutReason(reason: LogoutReason): void {
   sessionStorage.setItem(LOGOUT_REASON_KEY, reason);
 }
 
-export function consumeLogoutReason(): LogoutReason | null {
+export function peekLogoutReason(): LogoutReason | null {
   const raw = sessionStorage.getItem(LOGOUT_REASON_KEY);
-  sessionStorage.removeItem(LOGOUT_REASON_KEY);
   return VALID_REASONS.find((reason) => reason === raw) ?? null;
+}
+
+export function clearLogoutReason(): void {
+  sessionStorage.removeItem(LOGOUT_REASON_KEY);
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

@@ -3,7 +3,9 @@ import { Link, useParams } from "react-router";
 import { isApiError } from "@/api/api-error";
 import { useAuthStore } from "@/features/auth/store/auth.store";
 import { RegateSheet } from "@/features/batch/components/regate-sheet";
+import { StrukLinkSheet } from "@/features/batch/components/struk-link-sheet";
 import { useBatchDetail } from "@/features/batch/hooks/use-batch-detail";
+import { useMintStruk } from "@/features/batch/hooks/use-mint-struk";
 import { AppendEventSheet } from "@/features/ledger/components/append-event-sheet";
 import { uiAppendOptions } from "@/features/ledger/ledger-append";
 import { useLedgerEvents } from "@/features/ledger/hooks/use-ledger-events";
@@ -16,6 +18,7 @@ import { FractionBar } from "@/shared/components/data/fraction-bar";
 import { PitaPaspor } from "@/shared/components/data/pita-paspor";
 import { Button } from "@/shared/components/ui/button";
 import { Stamp } from "@/shared/components/ui/stamp";
+import { useToastStore } from "@/shared/components/ui/toast-store";
 import { ErrorState } from "@/shared/components/feedback/error-state";
 import { PageHeader } from "@/shared/components/layout/page-header";
 import { Skeleton, SkeletonList } from "@/shared/components/ui/skeleton";
@@ -23,6 +26,7 @@ import { BATCH_STATUS_LABELS } from "@/shared/constants/batch.constant";
 import { FLOW_LABELS, MOISTURE_LABELS, type MoistureProxy } from "@/shared/constants/flow.constant";
 import { TIER_LABELS } from "@/shared/constants/tier.constant";
 import { formatDateTime } from "@/shared/lib/format";
+import type { StrukLinkDto } from "@/shared/types/struk.types";
 
 interface MetaRowProps {
   readonly label: string;
@@ -50,6 +54,12 @@ export function BatchDetailPage() {
   const failed = batchQuery.isError || ledgerQuery.isError;
   const error = isApiError(batchQuery.error) ? batchQuery.error : isApiError(ledgerQuery.error) ? ledgerQuery.error : null;
   const batch = batchQuery.data;
+  const role = useAuthStore((state) => state.role);
+  const [appendOpen, setAppendOpen] = useState(false);
+  const [regateOpen, setRegateOpen] = useState(false);
+  const [strukLink, setStrukLink] = useState<StrukLinkDto | null>(null);
+  const mintStruk = useMintStruk();
+  const showToast = useToastStore((state) => state.show);
 
   const retry = () => {
     void batchQuery.refetch();
@@ -82,11 +92,22 @@ export function BatchDetailPage() {
   const ongoing = batch.status !== "SELESAI" && batch.status !== "TERSANGKUT";
   const moisture =
     batch.moistureProxy === null ? null : MOISTURE_LABELS[batch.moistureProxy as MoistureProxy];
-  const role = useAuthStore((state) => state.role);
-  const [appendOpen, setAppendOpen] = useState(false);
-  const [regateOpen, setRegateOpen] = useState(false);
   const appendOptions = role === null ? [] : uiAppendOptions(role, batch.status);
   const canRegate = batch.status === "GAGAL_GATE" && (role === "sppg_staff" || role === "admin");
+
+  const handleMintStruk = () => {
+    mintStruk.mutate(batch.id, {
+      onSuccess: (link) => {
+        setStrukLink(link);
+      },
+      onError: (cause) => {
+        showToast({
+          message: isApiError(cause) ? cause.message : "Tidak dapat membuat tautan struk.",
+          tone: "bata"
+        });
+      }
+    });
+  };
 
   return (
     <div className="flex max-w-3xl flex-col gap-6">
@@ -102,7 +123,7 @@ export function BatchDetailPage() {
         <span className="text-sm text-ink-lemah">
           {BATCH_STATUS_LABELS[batch.status]} · {FLOW_LABELS[batch.aliran]}
         </span>
-        {role === null || (appendOptions.length === 0 && !canRegate) ? null : (
+        {role === null ? null : (
           <div className="ml-auto flex flex-wrap gap-2">
             {appendOptions.length === 0 ? null : (
               <Button variant="secondary" size="sm" onClick={() => setAppendOpen(true)}>
@@ -114,6 +135,9 @@ export function BatchDetailPage() {
                 Nilai ulang gerbang
               </Button>
             ) : null}
+            <Button variant="secondary" size="sm" loading={mintStruk.isPending} onClick={handleMintStruk}>
+              Bagikan struk
+            </Button>
           </div>
         )}
       </div>
@@ -172,6 +196,13 @@ export function BatchDetailPage() {
         batchId={batch.id}
         currentMoistureProxy={batch.moistureProxy}
         currentVisibleOil={batch.visibleOil}
+      />
+
+      <StrukLinkSheet
+        link={strukLink}
+        onOpenChange={(open) => {
+          if (!open) setStrukLink(null);
+        }}
       />
 
       <p className="text-xs text-ink-lemah">

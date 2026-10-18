@@ -1,8 +1,7 @@
 import { useWatch, type UseFormReturn } from "react-hook-form";
-import { buttonStyles } from "@/shared/components/ui/button";
+import { Button } from "@/shared/components/ui/button";
 import { Field } from "@/shared/components/ui/field";
 import { Input } from "@/shared/components/ui/input";
-import { cn } from "@/shared/lib/cn";
 import { formatKgValue, parseKg } from "@/shared/lib/format";
 import type { CaptureFormValues } from "@/features/field-capture/schemas/create-batch.schema";
 
@@ -48,17 +47,15 @@ export function StepWeight({ form }: StepWeightProps) {
       </Field>
       <div className="flex flex-wrap gap-2">
         {QUICK_ADDS.map((item) => (
-          <button
+          <Button
             key={item.label}
-            type="button"
+            variant="secondary"
+            size="sm"
+            className="font-mono pointer-coarse:h-11"
             onClick={() => addDelta(item.delta)}
-            className={cn(
-              buttonStyles({ variant: "secondary", size: "sm" }),
-              "font-mono pointer-coarse:h-11"
-            )}
           >
             {item.label}
-          </button>
+          </Button>
         ))}
       </div>
     </div>

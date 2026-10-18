@@ -11,6 +11,7 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "typecheck": "tsc -b",
+    "icons:generate": "node scripts/generate-icons.mjs",
     "lint": "eslint . --max-warnings=0",
     "test": "vitest",
     "test:run": "vitest run",
@@ -63,6 +64,7 @@
     "typescript-eslint": "^8.71.2",
     "vite": "^8.3.4",
     "vite-plugin-pwa": "^2.0.0",
-    "vitest": "^4.1.9"
+    "vitest": "^4.1.9",
+    "workbox-window": "^7.4.1"
   }
 }

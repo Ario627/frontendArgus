@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { isApiError } from "@/api/api-error";
 import { useRunDisposition } from "@/features/disposition/hooks/use-run-disposition";
 import { useSppgList } from "@/features/sppg/hooks/use-sppg-list";
@@ -25,14 +25,17 @@ export function RunDispositionSheet({ open, onOpenChange, defaultDate }: RunDisp
   const [date, setDate] = useState(defaultDate);
   const [report, setReport] = useState<RunDispositionReport | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [wasOpen, setWasOpen] = useState(open);
 
-  useEffect(() => {
-    if (!open) return;
-    setSppgId("");
-    setDate(defaultDate === "" ? wibIsoDate(0) : defaultDate);
-    setReport(null);
-    setError(null);
-  }, [open, defaultDate]);
+  if (open !== wasOpen) {
+    setWasOpen(open);
+    if (open) {
+      setSppgId("");
+      setDate(defaultDate === "" ? wibIsoDate(0) : defaultDate);
+      setReport(null);
+      setError(null);
+    }
+  }
 
   const submit = () => {
     setError(null);

@@ -4,6 +4,7 @@ import type { VerificationReport } from "@/shared/types/ledger.types";
 import {
   describeAnomaly,
   describeChainReason,
+  describeParameterSource,
   describeTransfer
 } from "@/features/ledger/ledger-format";
 
@@ -28,8 +29,8 @@ export function buildVerifyReportText(report: VerificationReport): string {
     );
     lines.push(
       `Parameter: susut wajar ${formatNumber(balance.parameter.susutWajar * 100, 1)}% ` +
-        `(${balance.parameter.susutWajarSumber}), toleransi ${formatNumber(balance.parameter.toleransi * 100, 1)}% ` +
-        `(${balance.parameter.toleransiSumber})`
+        `(${describeParameterSource(balance.parameter.susutWajarSumber)}), toleransi ${formatNumber(balance.parameter.toleransi * 100, 1)}% ` +
+        `(${describeParameterSource(balance.parameter.toleransiSumber)})`
     );
   }
   if (report.spoilage.elapsedHours !== null) {
