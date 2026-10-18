@@ -121,6 +121,24 @@ export const router = createBrowserRouter([
                 })
               },
               {
+                path: "/anomalies",
+                lazy: async () => ({
+                  Component: (await import("@/features/anomalies/pages/anomalies-page")).AnomaliesPage
+                })
+              },
+              {
+                path: "/audit",
+                lazy: async () => ({
+                  Component: (await import("@/features/audit/pages/audit-page")).AuditPage
+                })
+              },
+              {
+                path: "/facilities",
+                lazy: async () => ({
+                  Component: (await import("@/features/facilities/pages/facilities-page")).FacilitiesPage
+                })
+              },
+              {
                 path: "/dispositions",
                 lazy: async () => ({
                   Component: (await import("@/features/disposition/pages/dispositions-page")).DispositionsPage

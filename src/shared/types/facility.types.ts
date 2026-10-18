@@ -36,3 +36,14 @@ export interface FacilityDto {
   readonly isDemo: boolean;
   readonly createdAt: string;
 }
+
+export interface ProfileDto {
+  readonly id: string;
+  readonly facilityId: string;
+  readonly version: number;
+  readonly rules: Record<string, unknown>;
+  readonly effectiveFrom: string;
+  readonly effectiveUntil: string | null;
+  readonly createdBy: string | null;
+  readonly createdAt: string;
+}

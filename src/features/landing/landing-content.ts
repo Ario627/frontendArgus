@@ -1,5 +1,10 @@
 import type { GateStatus } from "@/shared/constants/gate.constant";
+import type { FractionValues } from "@/shared/constants/fraction.constant";
 import type { LedgerEventDto, TransferEvaluation } from "@/shared/types/ledger.types";
+
+export const DEMO_BATCH_CODE = "0192F0C8-1111";
+
+export const DEMO_FRACTIONS: FractionValues = Object.freeze({ A: 40, B: 45, C: 10, E: 5 });
 
 export interface LandingFact {
   readonly value: string;
@@ -81,18 +86,14 @@ export const GATE_SPECIMENS: readonly GateSpecimen[] = Object.freeze([
   { verdict: "TOLAK", meaning: "Tercatat tersangkut, butuh penanganan manual" }
 ]);
 
-function demoHash(seed: number): string {
-  const base = "0123456789abcdef";
-  let state = Math.imul(seed, 2654435761) >>> 0;
-  let value = "";
-  for (let index = 0; index < 64; index += 1) {
-    state = (Math.imul(state, 1103515245) + 12345) >>> 0;
-    value += base.charAt(state & 15);
-  }
-  return value;
-}
-
-const DEMO_HASHES = [7, 13, 29, 41, 53, 61].map(demoHash);
+const DEMO_HASHES: readonly string[] = Object.freeze([
+  "5aa1ff623ed3354862ea1ddbcf5fffb4fbf6ccdb7a4ad073e64341abd2a1e656",
+  "21860565c245b2c54aa42521ab1abb01ffbd7bd0bbc4cd5a61269d3610c7a86b",
+  "5dc15dbefd74486973b0ed2bb85693300ee938001fe37e4e53638268477a706d",
+  "f2675a9af654a6709a917e0017012ea39b47a90330e12d6a5d1ff1d220927825",
+  "409f83f9c8cbe1fc386813fc69f749d2b3b173cbf489264cf960dae4b751e790",
+  "f6293e2ecfec943e3bf58373c70185904d9c327bbad9c79ce9a59a2b5e91686d"
+]);
 const DEMO_BATCH_ID = "0192f0c8-1111-7000-8000-000000000001";
 
 interface DemoEventInput {

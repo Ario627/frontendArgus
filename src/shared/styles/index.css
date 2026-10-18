@@ -209,3 +209,46 @@
   text-transform: uppercase;
   font-weight: 500;
 }
+
+@utility bg-grid-teknis {
+  background-image:
+    repeating-linear-gradient(
+      to right,
+      color-mix(in oklab, var(--color-garis) 70%, transparent) 0 1px,
+      transparent 1px 32px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--color-garis) 70%, transparent) 0 1px,
+      transparent 1px 32px
+    );
+}
+
+@utility bg-ruled {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0 31px,
+    color-mix(in oklab, var(--color-garis) 80%, transparent) 31px 32px
+  );
+}
+
+@utility bg-ruler-minor {
+  background-image: repeating-linear-gradient(
+    to right,
+    color-mix(in oklab, var(--color-ink-lemah) 40%, transparent) 0 1px,
+    transparent 1px 8px
+  );
+}
+
+@utility bg-ruler-major {
+  background-image: repeating-linear-gradient(
+    to right,
+    color-mix(in oklab, var(--color-ink-lemah) 70%, transparent) 0 1px,
+    transparent 1px 64px
+  );
+}
+
+@utility mask-fade-down {
+  -webkit-mask-image: linear-gradient(to bottom, rgb(0 0 0) 35%, transparent 100%);
+  mask-image: linear-gradient(to bottom, rgb(0 0 0) 35%, transparent 100%);
+}
