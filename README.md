@@ -229,7 +229,7 @@ Ikon PWA dihasilkan oleh `pnpm icons:generate` (skrip `scripts/generate-icons.mj
 
 | Variabel | Wajib | Default | Arti |
 |---|---|---|---|
-| `VITE_API_URL` | ya | — | URL penuh API, termasuk `/api/v1` |
+| `VITE_API_URL` | ya | — | URL penuh API (`http://host:3001/api/v1`) atau path relatif (`/api/v1`) bila disajikan di origin yang sama |
 | `VITE_APP_TITLE` | tidak | `ARGUS` | Judul dokumen |
 | `VITE_POLL_OPERATIONAL_MS` | tidak | `60000` | Polling daftar operasional |
 | `VITE_POLL_FLEET_MS` | tidak | `30000` | Polling telemetri armada |
