@@ -1,12 +1,9 @@
 import { CircleMarker, MapContainer, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { describeFleet } from "@/features/fleet/liveness";
+import { MAP_TILE_ATTRIBUTION, MAP_TILE_URL } from "@/shared/lib/map-tiles";
 import type { FleetStatus } from "@/shared/constants/fleet.constant";
 import type { FleetDto } from "@/shared/types/fleet.types";
-
-const TILE_URL = "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
-const TILE_ATTRIBUTION =
-  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
 
 const STATUS_COLORS: Readonly<Record<FleetStatus, string>> = Object.freeze({
   ONLINE_NORMAL: "var(--color-daun)",
@@ -43,7 +40,7 @@ export function FleetMap({ fleets }: FleetMapProps) {
       scrollWheelZoom={false}
       className="h-full w-full"
     >
-      <TileLayer url={TILE_URL} attribution={TILE_ATTRIBUTION} />
+      <TileLayer url={MAP_TILE_URL} attribution={MAP_TILE_ATTRIBUTION} />
       {positioned.map((fleet) => (
         <CircleMarker
           key={fleet.id}

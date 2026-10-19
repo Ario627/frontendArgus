@@ -11,6 +11,13 @@ export const GATE_TONES: Readonly<Record<GateStatus, StatusTone>> = Object.freez
   TOLAK: "bata"
 });
 
+export const GATE_LABELS: Readonly<Record<GateStatus, string>> = Object.freeze({
+  LOLOS: "Lolos",
+  PERBAIKI: "Perbaiki",
+  ALIHKAN: "Alihkan",
+  TOLAK: "Tolak"
+});
+
 const GATE_STATUS_SET: ReadonlySet<string> = new Set(GATE_STATUSES);
 
 export function isGateStatus(value: unknown): value is GateStatus {

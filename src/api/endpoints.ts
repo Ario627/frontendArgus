@@ -32,6 +32,11 @@ export const endpoints = Object.freeze({
     list: "/dispositions",
     run: "/dispositions/run"
   }),
+  dispatch: Object.freeze({
+    board: "/dispatch/board",
+    assign: "/dispatch/assign",
+    auto: "/dispatch/auto"
+  }),
   ledger: Object.freeze({
     list: (batchId: string) => `/ledger/${batchId}`,
     append: (batchId: string) => `/ledger/${batchId}/events`,
@@ -71,7 +76,8 @@ export const endpoints = Object.freeze({
   }),
   dashboard: Object.freeze({
     summary: "/dashboard/summary",
-    narrative: "/dashboard/narrative"
+    narrative: "/dashboard/narrative",
+    impact: "/dashboard/impact"
   }),
   anomalies: Object.freeze({
     list: "/anomalies",
@@ -122,6 +128,7 @@ export const endpoints = Object.freeze({
     list: "/audit"
   }),
   maps: Object.freeze({
-    directions: "/maps/directions"
+    directions: "/maps/directions",
+    route: "/maps/route"
   })
 });

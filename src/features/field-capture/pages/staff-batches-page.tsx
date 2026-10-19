@@ -146,8 +146,9 @@ export function StaffBatchesPage() {
       ) : null}
 
       <p className="text-xs text-ink-lemah">
-        Serah terima dicatat sebagai bukti buku besar. Penerima melengkapi dari sisinya agar status
-        menjadi sah.
+        Batch baru langsung masuk antrean penugasan dan otomatis ditugaskan bila ada armada
+        berkapasitas. Pengemudi menandai muatan terangkut, lalu Anda mencatat serah terima;
+        penerima melengkapi dari sisinya agar status menjadi sah.
       </p>
 
       <TransferConfirmSheet

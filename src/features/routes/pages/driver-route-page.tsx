@@ -138,6 +138,15 @@ export function DriverRoutePage() {
         }
       />
 
+      <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-ink-lemah">
+        <span className="font-mono text-2xs">ALUR</span>
+        <span>ambil di dapur</span>
+        <span aria-hidden>→</span>
+        <span>bawa ke fasilitas</span>
+        <span aria-hidden>→</span>
+        <span>serah terima dua sisi</span>
+      </p>
+
       {alert.newCount > 0 ? (
         <div className="flex items-center justify-between gap-3 rounded-kontainer border border-kunyit/60 bg-kunyit/5 px-4 py-2.5">
           <p className="text-sm text-ink">
@@ -193,98 +202,106 @@ export function DriverRoutePage() {
           ) : null}
 
           {stops.length === 0 ? null : (
-            <>
-              <StopProgressStrip stops={stops} />
-
-              {currentStop === null ? (
-                <section className="rounded-kontainer border border-daun/50 bg-daun/5 px-4 py-3">
-                  <p className="text-sm text-ink">
-                    Semua stop selesai. Rute ini tuntas — lapor admin bila ada kendala terakhir.
-                  </p>
-                </section>
-              ) : (
-                <section className="flex flex-col gap-3">
-                  <div className="flex min-w-0 flex-col">
-                    <span className="label-cap text-ink-lemah">Tugas saat ini</span>
-                    <span className="text-md font-medium text-ink">
-                      {ROUTE_STOP_KIND_LABELS[currentStop.jenis]} {currentPlaceLabel(currentStop)}
-                    </span>
-                    <span className="flex flex-wrap gap-x-3 font-mono text-xs text-ink-lemah">
-                      <span>stop {currentStop.urutan}</span>
-                      <span>batch {currentStop.batchId.slice(0, 8)}</span>
-                      {currentStop.eta === null ? null : (
-                        <span>ETA {formatTime(currentStop.eta)}</span>
-                      )}
+            <div className="flex flex-col gap-4 lg:grid lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:items-start lg:gap-6">
+              <div className="flex flex-col gap-3">
+                {currentStop === null ? (
+                  <section className="rounded-kontainer border border-daun/50 bg-daun/5 px-4 py-3">
+                    <p className="text-sm text-ink">
+                      Semua stop selesai. Rute ini tuntas — lapor admin bila ada kendala terakhir.
+                    </p>
+                  </section>
+                ) : (
+                  <section className="flex flex-col gap-3 rounded-kontainer border border-garis px-4 py-4 lg:px-5 lg:py-5">
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div className="flex min-w-0 flex-col">
+                        <span className="label-cap text-ink-lemah">Tugas saat ini</span>
+                        <span className="text-md font-medium text-ink lg:text-lg">
+                          {ROUTE_STOP_KIND_LABELS[currentStop.jenis]} {currentPlaceLabel(currentStop)}
+                        </span>
+                        <span className="mt-0.5 flex flex-wrap gap-x-3 font-mono text-xs text-ink-lemah">
+                          <span>stop {currentStop.urutan}</span>
+                          <span>batch {currentStop.batchId.slice(0, 8)}</span>
+                          {currentStop.eta === null ? null : (
+                            <span>ETA {formatTime(currentStop.eta)}</span>
+                          )}
+                        </span>
+                      </div>
                       <span
                         className={cn(
-                          currentStop.status === "SAMPAI" ? "text-biru-tinta" : "text-ink-lemah"
+                          "rounded-full border px-2.5 py-0.5 font-mono text-2xs",
+                          currentStop.status === "SAMPAI"
+                            ? "border-biru-tinta/50 text-biru-tinta"
+                            : "border-garis text-ink-lemah"
                         )}
                       >
                         {ROUTE_STOP_STATUS_LABELS[currentStop.status]}
                       </span>
-                    </span>
-                  </div>
+                    </div>
 
-                  {target === null ? null : (
-                    <DriverNavPanel
-                      targetLabel={target.label}
-                      target={target.coords}
-                      position={position.position}
-                      positionSource={position.source}
-                    />
-                  )}
-
-                  <div className="flex flex-wrap gap-2">
-                    {currentStop.status === "RENCANA" ? (
+                    <div className="flex flex-wrap gap-2">
+                      {currentStop.status === "RENCANA" ? (
+                        <Button
+                          size="lg"
+                          disabled={confirmStop.isPending}
+                          onClick={() => handleStopAction(currentStop.id, "SAMPAI")}
+                        >
+                          Sampai di lokasi
+                        </Button>
+                      ) : null}
+                      {currentStop.jenis === "AMBIL" && currentStop.status !== "SELESAI" ? (
+                        <Button
+                          size="lg"
+                          variant="secondary"
+                          onClick={() => setTransferBatchId(currentStop.batchId)}
+                        >
+                          Catat serah terima
+                        </Button>
+                      ) : null}
                       <Button
                         size="lg"
+                        variant={currentStop.status === "SAMPAI" ? "primary" : "secondary"}
                         disabled={confirmStop.isPending}
-                        onClick={() => handleStopAction(currentStop.id, "SAMPAI")}
+                        onClick={() => handleStopAction(currentStop.id, "SELESAI")}
                       >
-                        Sampai di lokasi
+                        {currentStop.jenis === "AMBIL" ? "Muatan terangkut" : "Bongkar selesai"}
                       </Button>
-                    ) : null}
-                    {currentStop.jenis === "AMBIL" && currentStop.status !== "SELESAI" ? (
                       <Button
                         size="lg"
-                        variant="secondary"
-                        onClick={() => setTransferBatchId(currentStop.batchId)}
+                        variant="danger"
+                        disabled={confirmStop.isPending}
+                        onClick={() => setFailTarget(currentStop)}
                       >
-                        Catat serah terima
+                        Gagal
                       </Button>
-                    ) : null}
-                    <Button
-                      size="lg"
-                      variant={currentStop.status === "SAMPAI" ? "primary" : "secondary"}
-                      disabled={confirmStop.isPending}
-                      onClick={() => handleStopAction(currentStop.id, "SELESAI")}
-                    >
-                      {currentStop.jenis === "AMBIL" ? "Muatan terangkut" : "Bongkar selesai"}
-                    </Button>
-                    <Button
-                      size="lg"
-                      variant="danger"
-                      disabled={confirmStop.isPending}
-                      onClick={() => setFailTarget(currentStop)}
-                    >
-                      Gagal
-                    </Button>
-                  </div>
+                    </div>
 
-                  <p className="text-xs text-ink-lemah">{nextLabel(nextAfterCurrent)}</p>
-                </section>
-              )}
+                    <p className="text-xs text-ink-lemah">{nextLabel(nextAfterCurrent)}</p>
+                  </section>
+                )}
 
-              {detail.data === undefined ? null : (
-                <StopManifestList
-                  stops={detail.data.stops}
-                  facilityNames={facilityNames}
-                  actionsEnabled={false}
-                  busy={false}
-                  onAction={() => undefined}
-                />
-              )}
-            </>
+                {target === null ? null : (
+                  <DriverNavPanel
+                    targetLabel={target.label}
+                    target={target.coords}
+                    position={position.position}
+                    positionSource={position.source}
+                  />
+                )}
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <StopProgressStrip stops={stops} />
+                {detail.data === undefined ? null : (
+                  <StopManifestList
+                    stops={detail.data.stops}
+                    facilityNames={facilityNames}
+                    actionsEnabled={false}
+                    busy={false}
+                    onAction={() => undefined}
+                  />
+                )}
+              </div>
+            </div>
           )}
         </div>
       ) : null}

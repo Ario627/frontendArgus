@@ -130,6 +130,9 @@ export const qk = Object.freeze({
     disposition: (id: string) => ["batches", id, "disposition"] as const
   }),
   dispositions: (filters?: DispositionListFilters) => ["dispositions", filters ?? null] as const,
+  dispatch: Object.freeze({
+    board: (sppgId: string | null) => ["dispatch", "board", sppgId ?? "semua"] as const
+  }),
   ledger: Object.freeze({
     list: (batchId: string) => ["ledger", batchId] as const,
     verify: (batchId: string) => ["ledger", batchId, "verify"] as const,
@@ -166,7 +169,8 @@ export const qk = Object.freeze({
   }),
   dashboard: Object.freeze({
     summary: (sppgId: string | null) => ["dashboard", "summary", sppgId ?? "semua"] as const,
-    narrative: (sppgId: string | null) => ["dashboard", "narrative", sppgId ?? "semua"] as const
+    narrative: (sppgId: string | null) => ["dashboard", "narrative", sppgId ?? "semua"] as const,
+    impact: (sppgId: string | null) => ["dashboard", "impact", sppgId ?? "semua"] as const
   }),
   anomalies: Object.freeze({
     list: (filters?: AnomalyListFilters) => ["anomalies", "list", filters ?? null] as const
@@ -179,7 +183,8 @@ export const qk = Object.freeze({
     link: (sha256: string) => ["photos", sha256] as const
   }),
   maps: Object.freeze({
-    directions: (from: string, to: string) => ["maps", "directions", from, to] as const
+    directions: (from: string, to: string) => ["maps", "directions", from, to] as const,
+    route: (from: string, to: string) => ["maps", "route", from, to] as const
   }),
   publicSppg: (slug: string) => ["public", "sppg", slug] as const,
   publicStruk: (token: string) => ["public", "struk", token] as const

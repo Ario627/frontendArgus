@@ -33,7 +33,7 @@ export function ConsoleLayout() {
 
   return (
     <div className="min-h-dvh md:flex">
-      <aside className="hidden border-r border-garis md:sticky md:top-0 md:flex md:h-dvh md:w-52 md:shrink-0 md:flex-col md:overflow-y-auto">
+      <aside className="hidden border-r border-garis md:sticky md:top-0 md:flex md:h-dvh md:w-56 md:shrink-0 md:flex-col md:overflow-y-auto">
         <div className="px-3.5 pt-4 pb-1">
           <p className="text-md font-semibold text-ink">ARGUS</p>
           <p className="text-xs text-ink-lemah">Konsol pengelolaan</p>
@@ -58,8 +58,10 @@ export function ConsoleLayout() {
           </button>
           <span className="text-md font-semibold text-ink">ARGUS</span>
         </div>
-        <main className="min-w-0 flex-1 px-4 py-4 md:px-6 md:py-6">
-          <Outlet />
+        <main className="min-w-0 flex-1 px-4 py-4 md:px-8 md:py-7 xl:px-12">
+          <div className="mx-auto w-full max-w-6xl">
+            <Outlet />
+          </div>
         </main>
       </div>
       <Sheet

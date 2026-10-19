@@ -157,6 +157,12 @@ export const router = createBrowserRouter([
                 })
               },
               {
+                path: "/dispatch",
+                lazy: async () => ({
+                  Component: (await import("@/features/dispatch/pages/dispatch-page")).DispatchPage
+                })
+              },
+              {
                 path: "/menu",
                 lazy: async () => ({
                   Component: (await import("@/features/menu/pages/menu-page")).MenuPage

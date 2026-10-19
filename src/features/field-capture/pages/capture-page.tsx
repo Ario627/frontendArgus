@@ -17,6 +17,7 @@ import { PhotoCaptureField } from "@/features/photo/components/photo-capture-fie
 import { uploadPhoto } from "@/features/photo/api/photo.api";
 import { Button } from "@/shared/components/ui/button";
 import { FieldActionBar } from "@/shared/components/layout/field-action-bar";
+import { PageHeader } from "@/shared/components/layout/page-header";
 import { formatTime } from "@/shared/lib/format";
 import { newClientEventId, newId } from "@/shared/lib/id";
 import type { CompressedPhoto } from "@/features/photo/photo-compress";
@@ -165,6 +166,11 @@ export function CapturePage() {
 
   return (
     <div className="flex flex-col gap-5">
+      <PageHeader
+        title="Paspor batch"
+        description="Berat, komposisi, dan kondisi — dasar penilaian gerbang dan putusan penanganan."
+      />
+
       {draft.pending === null ? null : (
         <div className="flex items-center justify-between gap-3 rounded-kontainer border border-garis px-3 py-2">
           <span className="text-sm text-ink">

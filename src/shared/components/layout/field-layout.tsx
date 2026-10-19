@@ -48,8 +48,10 @@ export function FieldLayout({ title = "ARGUS", syncIndicator }: FieldLayoutProps
         </button>
       </header>
       <OfflineBanner />
-      <main className="flex-1 px-4 py-4 pb-[calc(7.5rem+env(safe-area-inset-bottom))]">
-        <Outlet />
+      <main className="flex-1 px-4 py-4 pb-[calc(7.5rem+env(safe-area-inset-bottom))] md:px-6 md:py-6">
+        <div className="mx-auto w-full max-w-5xl">
+          <Outlet />
+        </div>
       </main>
       <FieldTabBar />
       <Sheet

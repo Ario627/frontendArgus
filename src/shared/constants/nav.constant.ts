@@ -22,6 +22,7 @@ export const CONSOLE_NAV: readonly NavGroup[] = Object.freeze([
     label: "Operasional",
     items: Object.freeze([
       { to: "/batches", label: "Batch", roles: Object.freeze(["admin", "dlh_auditor", "sppg_staff"] as const) },
+      { to: "/dispatch", label: "Antrean penugasan", roles: Object.freeze(["admin", "dlh_auditor", "sppg_staff"] as const) },
       { to: "/dispositions", label: "Antrean putusan", roles: Object.freeze(["admin", "dlh_auditor", "sppg_staff"] as const) },
       { to: "/routes", label: "Rute limpahan", roles: Object.freeze(["admin", "dlh_auditor", "sppg_staff"] as const) },
       { to: "/fleet", label: "Armada", roles: Object.freeze(["admin", "dlh_auditor"] as const) },

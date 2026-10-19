@@ -1,10 +1,19 @@
 import { apiGet } from "@/api/axios-client";
 import { endpoints } from "@/api/endpoints";
-import type { DashboardSummary, NarrativeView } from "@/shared/types/dashboard.types";
+import type {
+  DashboardImpact,
+  DashboardSummary,
+  NarrativeView
+} from "@/shared/types/dashboard.types";
 
 export function fetchDashboardSummary(sppgId: string | null): Promise<DashboardSummary> {
   const query = sppgId === null ? "" : `?sppgId=${encodeURIComponent(sppgId)}`;
   return apiGet<DashboardSummary>(`${endpoints.dashboard.summary}${query}`);
+}
+
+export function fetchDashboardImpact(sppgId: string | null): Promise<DashboardImpact> {
+  const query = sppgId === null ? "" : `?sppgId=${encodeURIComponent(sppgId)}`;
+  return apiGet<DashboardImpact>(`${endpoints.dashboard.impact}${query}`);
 }
 
 export interface NarrativeQuery {

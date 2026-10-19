@@ -47,11 +47,19 @@ function envInteger(name: string, min: number, max: number, fallback: number) {
     .default(fallback);
 }
 
+const API_PATH_PATTERN = /^\/(?!\/)[^\s]*$/;
+const LOOPBACK_HOSTS: ReadonlySet<string> = new Set(["localhost", "127.0.0.1", "::1", "[::1]"]);
+
 const envSourceSchema = z.object({
-  VITE_API_URL: z.url({
-    protocol: /^https?$/,
-    error: "VITE_API_URL wajib alamat http/https yang valid."
-  }),
+  VITE_API_URL: z.union([
+    z.url({
+      protocol: /^https?$/,
+      error: "VITE_API_URL wajib alamat http/https yang valid atau path yang diawali /."
+    }),
+    z.string().regex(API_PATH_PATTERN, {
+      error: "VITE_API_URL wajib alamat http/https yang valid atau path yang diawali /."
+    })
+  ]),
   VITE_APP_TITLE: z
     .string()
     .trim()
@@ -115,15 +123,29 @@ function parseMediaOrigins(raw: string): { origins: readonly string[]; issues: r
   return { origins, issues };
 }
 
-function guardIssues(apiUrl: URL, isProduction: boolean): readonly string[] {
+function guardIssues(apiUrl: URL, raw: string, isProduction: boolean): readonly string[] {
   const issues: string[] = [];
   if (apiUrl.username !== "" || apiUrl.password !== "") {
     issues.push("VITE_API_URL tidak boleh memuat kredensial.");
   }
-  if (isProduction && apiUrl.protocol !== "https:") {
-    issues.push("VITE_API_URL wajib memakai https pada build produksi.");
+  const isRelative = raw.startsWith("/");
+  if (
+    isProduction &&
+    !isRelative &&
+    apiUrl.protocol !== "https:" &&
+    !LOOPBACK_HOSTS.has(apiUrl.hostname)
+  ) {
+    issues.push("VITE_API_URL wajib memakai https pada build produksi, kecuali localhost.");
   }
   return issues;
+}
+
+function resolveApiUrl(raw: string): URL | null {
+  if (raw.startsWith("/")) {
+    const origin = resolveSameOrigin();
+    return origin === undefined ? null : new URL(raw, origin);
+  }
+  return new URL(raw);
 }
 
 function resolveSameOrigin(): string | undefined {
@@ -135,9 +157,15 @@ function buildEnv(source: unknown, isProduction: boolean): EnvBuild {
   if (!parsed.success) return { ok: false, issues: formatIssues(parsed.error) };
   const data: ParsedSource = parsed.data;
   const apiUrl = normalizeApiUrl(data.VITE_API_URL);
-  const api = new URL(apiUrl);
+  const api = resolveApiUrl(apiUrl);
+  if (api === null) {
+    return {
+      ok: false,
+      issues: ["VITE_API_URL berupa path relatif tetapi origin halaman tidak tersedia."]
+    };
+  }
   const media = parseMediaOrigins(data.VITE_MEDIA_ORIGINS);
-  const issues = [...guardIssues(api, isProduction), ...media.issues];
+  const issues = [...guardIssues(api, apiUrl, isProduction), ...media.issues];
   if (issues.length > 0) return { ok: false, issues };
   return {
     ok: true,

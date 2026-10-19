@@ -6,6 +6,7 @@ import { RegateSheet } from "@/features/batch/components/regate-sheet";
 import { StrukLinkSheet } from "@/features/batch/components/struk-link-sheet";
 import { useBatchDetail } from "@/features/batch/hooks/use-batch-detail";
 import { useMintStruk } from "@/features/batch/hooks/use-mint-struk";
+import { CandidateScoreSheet } from "@/features/disposition/components/candidate-score-sheet";
 import { AppendEventSheet } from "@/features/ledger/components/append-event-sheet";
 import { uiAppendOptions } from "@/features/ledger/ledger-append";
 import { useLedgerEvents } from "@/features/ledger/hooks/use-ledger-events";
@@ -27,6 +28,7 @@ import { BATCH_STATUS_LABELS } from "@/shared/constants/batch.constant";
 import { FLOW_LABELS, MOISTURE_LABELS, type MoistureProxy } from "@/shared/constants/flow.constant";
 import { TIER_LABELS } from "@/shared/constants/tier.constant";
 import { formatDateTime } from "@/shared/lib/format";
+import type { DispositionQueueItem } from "@/shared/types/disposition.types";
 import type { StrukLinkDto } from "@/shared/types/struk.types";
 
 interface MetaRowProps {
@@ -58,6 +60,7 @@ export function BatchDetailPage() {
   const role = useAuthStore((state) => state.role);
   const [appendOpen, setAppendOpen] = useState(false);
   const [regateOpen, setRegateOpen] = useState(false);
+  const [decisionItem, setDecisionItem] = useState<DispositionQueueItem | null>(null);
   const [strukLink, setStrukLink] = useState<StrukLinkDto | null>(null);
   const mintStruk = useMintStruk();
   const showToast = useToastStore((state) => state.show);
@@ -136,6 +139,27 @@ export function BatchDetailPage() {
                 Nilai ulang gerbang
               </Button>
             ) : null}
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() =>
+                setDecisionItem({
+                  batchId: batch.id,
+                  sppgId: batch.sppgId,
+                  aliran: batch.aliran,
+                  weightKg: batch.weightKg,
+                  ageHours: Math.max(0, (Date.now() - Date.parse(batch.dikeluarkanAt)) / 3_600_000),
+                  status: batch.status,
+                  gateStatus: batch.gateStatus,
+                  tier: batch.tier,
+                  chosenFacilityId: null,
+                  decisionReason: null,
+                  decidedAt: null
+                })
+              }
+            >
+              Putusan penanganan
+            </Button>
             <Button variant="secondary" size="sm" loading={mintStruk.isPending} onClick={handleMintStruk}>
               Bagikan struk
             </Button>
@@ -204,6 +228,14 @@ export function BatchDetailPage() {
         batchId={batch.id}
         currentMoistureProxy={batch.moistureProxy}
         currentVisibleOil={batch.visibleOil}
+      />
+
+      <CandidateScoreSheet
+        open={decisionItem !== null}
+        onOpenChange={(open) => {
+          if (!open) setDecisionItem(null);
+        }}
+        item={decisionItem}
       />
 
       <StrukLinkSheet

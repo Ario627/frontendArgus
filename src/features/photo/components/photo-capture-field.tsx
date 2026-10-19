@@ -4,10 +4,16 @@ import { Button } from "@/shared/components/ui/button";
 import { cn } from "@/shared/lib/cn";
 import { formatBytes } from "@/shared/lib/format";
 
-const ERROR_MESSAGES: Readonly<Record<string, string>> = Object.freeze({
-  PHOTO_UNREADABLE: "Foto tidak dapat dibaca. Coba ambil ulang.",
-  PHOTO_TOO_LARGE: "Foto tetap terlalu besar setelah dikompres. Coba foto lain atau perkecil resolusinya."
-});
+const ERROR_MESSAGES = {
+  PHOTO_UNREADABLE:
+    "Foto ini tidak bisa dibaca browser. Coba JPG atau PNG, atau ambil ulang lewat kamera.",
+  PHOTO_TOO_LARGE:
+    "Foto tetap terlalu besar setelah dikompres. Coba foto lain atau perkecil resolusinya.",
+  CRYPTO_UNAVAILABLE:
+    "Perangkat ini tidak mengizinkan pembuatan hash. Buka aplikasi lewat https atau localhost."
+} as const satisfies Readonly<Record<string, string>>;
+
+type PickerKind = "camera" | "file";
 
 export interface PhotoCaptureFieldProps {
   readonly label?: string;
@@ -24,11 +30,11 @@ export function PhotoCaptureField({
   className,
   onPhotoChange
 }: PhotoCaptureFieldProps) {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const cameraRef = useRef<HTMLInputElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
   const [photo, setPhoto] = useState<CompressedPhoto | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [nonce, setNonce] = useState(0);
 
   const previewUrl = useMemo(
     () => (photo === null ? null : URL.createObjectURL(photo.blob)),
@@ -47,6 +53,13 @@ export function PhotoCaptureField({
     onPhotoChange(next);
   };
 
+  const pick = (kind: PickerKind) => {
+    const input = kind === "camera" ? cameraRef.current : fileRef.current;
+    if (input === null) return;
+    input.value = "";
+    input.click();
+  };
+
   const handleFile = (file: File | undefined) => {
     if (file === undefined) return;
     setBusy(true);
@@ -59,18 +72,21 @@ export function PhotoCaptureField({
         }
         applyPhoto(result.photo);
       })
-      .catch(() => {
-        setError("Foto tidak dapat diproses di perangkat ini.");
+      .catch((cause: unknown) => {
+        const cryptoUnavailable =
+          cause instanceof Error && cause.message.includes("CRYPTO");
+        setError(
+          cryptoUnavailable
+            ? ERROR_MESSAGES.CRYPTO_UNAVAILABLE
+            : "Foto tidak dapat diproses di perangkat ini. Coba foto lain."
+        );
       })
       .finally(() => {
         setBusy(false);
       });
   };
 
-  const openPicker = () => {
-    setNonce((value) => value + 1);
-    inputRef.current?.click();
-  };
+  const blocked = disabled || busy;
 
   return (
     <div className={cn("flex flex-col gap-2", className)}>
@@ -78,13 +94,27 @@ export function PhotoCaptureField({
       <p className="text-xs text-ink-lemah">{hint}</p>
 
       <input
-        ref={inputRef}
-        key={nonce}
+        ref={cameraRef}
         type="file"
         accept="image/*"
         capture="environment"
         className="sr-only"
-        disabled={disabled || busy}
+        disabled={blocked}
+        aria-hidden
+        tabIndex={-1}
+        onChange={(event) => {
+          handleFile(event.target.files?.[0]);
+          event.target.value = "";
+        }}
+      />
+      <input
+        ref={fileRef}
+        type="file"
+        accept="image/*"
+        className="sr-only"
+        disabled={blocked}
+        aria-hidden
+        tabIndex={-1}
         onChange={(event) => {
           handleFile(event.target.files?.[0]);
           event.target.value = "";
@@ -94,18 +124,17 @@ export function PhotoCaptureField({
       {busy ? (
         <p className="text-sm text-ink-lemah">Mengompres foto...</p>
       ) : photo === null ? (
-        <button
-          type="button"
-          disabled={disabled}
-          onClick={openPicker}
-          className={cn(
-            "flex min-h-20 flex-col items-center justify-center gap-1 rounded-kontainer border border-dashed border-ink-lemah/60 px-4 py-4 text-center transition-colors",
-            "hover:border-ink-lemah disabled:cursor-not-allowed disabled:opacity-50"
-          )}
-        >
-          <span className="text-sm text-ink">Ambil atau pilih foto</span>
-          <span className="text-xs text-ink-lemah">Kamera belakang dipakai bila tersedia.</span>
-        </button>
+        <div className="flex flex-col gap-2.5 rounded-kontainer border border-dashed border-ink-lemah/60 px-4 py-3.5">
+          <p className="text-sm text-ink">Belum ada foto</p>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="secondary" size="sm" disabled={blocked} onClick={() => pick("file")}>
+              Pilih file
+            </Button>
+            <Button variant="ghost" size="sm" disabled={blocked} onClick={() => pick("camera")}>
+              Ambil dari kamera
+            </Button>
+          </div>
+        </div>
       ) : (
         <figure className="flex flex-col gap-2">
           <img
@@ -121,19 +150,14 @@ export function PhotoCaptureField({
             </span>
             <span>{photo.mime === "image/webp" ? "webp" : "jpeg"}</span>
           </figcaption>
-          <div className="flex gap-2">
-            <Button
-              variant="secondary"
-              size="sm"
-              disabled={disabled}
-              onClick={openPicker}
-            >
+          <div className="flex flex-wrap gap-2">
+            <Button variant="secondary" size="sm" disabled={blocked} onClick={() => pick("file")}>
               Ganti foto
             </Button>
             <Button
               variant="ghost"
               size="sm"
-              disabled={disabled}
+              disabled={blocked}
               onClick={() => {
                 applyPhoto(null);
                 setError(null);

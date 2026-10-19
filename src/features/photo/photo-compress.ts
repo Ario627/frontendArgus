@@ -1,11 +1,11 @@
 import { sha256HexOfBlob } from "@/shared/lib/hash";
 
-const DIMENSION_FACTORS = Object.freeze([1, 0.85, 0.72, 0.6, 0.5]);
-const QUALITY_STEPS = Object.freeze([0.82, 0.72, 0.62, 0.52, 0.42]);
+const DIMENSION_FACTORS = Object.freeze([1, 0.85, 0.7]);
+const QUALITY_STEPS = Object.freeze([0.92, 0.86, 0.8, 0.72, 0.64, 0.55]);
 const MIME_LADDER = Object.freeze(["image/webp", "image/jpeg"] as const);
-const MIN_DIMENSION = 640;
-const DEFAULT_MAX_BYTES = 780_000;
-const DEFAULT_MAX_DIMENSION = 1600;
+const MIN_DIMENSION = 720;
+const DEFAULT_MAX_BYTES = 1_500_000;
+const DEFAULT_MAX_DIMENSION = 1920;
 
 export interface CompressedPhoto {
   readonly blob: Blob;
@@ -99,6 +99,8 @@ const encodeAt = (
   canvas.height = height;
   const context = canvas.getContext("2d");
   if (context === null) return Promise.resolve(null);
+  context.imageSmoothingEnabled = true;
+  context.imageSmoothingQuality = "high";
   context.drawImage(source, 0, 0, width, height);
   return new Promise((resolve) => {
     canvas.toBlob((blob) => resolve(blob), type, quality);
